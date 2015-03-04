@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="qianhui">#666666</color>
+    <color name="header_bg_common">#323a45</color>
+    <color name="title_txt_color">#f1f1f3</color>
+    <color name="circle_color">#323a45</color>
+    <color name="ring_color">#14b9d6</color>
+    <color name="hailv_color">#2E8B50</color>
+    <color name="red_color">#FF0000</color>
+    <color name="qianhui_color">#DCDCDC</color>
+    <color name="qianhui_color2">#cCcCcC</color>
+    <color name="qianhui_88">#88cccccc</color>
+    <color name="bai_color">#f1ffffff</color>
+    <color name="blue_color">#3366b6</color>
+    <color name="blue_88color">#883366b6</color>
+    <color name="blue_D8color">#D83366CC</color>
+    <color name="e1_white">#e1ffffff</color>
+    <color name="white_20">#20ffffff</color>
+    <color name="white_32">#32ffffff</color>
+    <color name="white_aa">#aaffffff</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="gray_background">#ffececec</color>
+    <color name="red">#E51A18</color>
+    <color name="line_color">#523E2E</color>
+    <color name="search_tab_nomarl">#363636</color>
+    <color name="search_tab_select">#E82926</color>
+    <color name="menu_item_text_color">#E60200</color>
+    <color name="news_item_has_read_textcolor">#828282</color>
+    <color name="news_item_no_read_textcolor">#363636</color>
+    <color name="green_33cc99">#33cc99</color>
+    <color name="green_009966">#009966</color>
+    <color name="green_00cc99">#00cc99</color>
+
+</resources>

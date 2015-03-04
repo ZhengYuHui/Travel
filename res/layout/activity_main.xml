@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/ll_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/list_icon" />
+
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/qianhui_88" />
+
+        <TextView
+            android:id="@+id/locationSearch"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="99"
+            android:clickable="true"
+            android:drawableLeft="@drawable/default_common_searchicon_icon_normal"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="搜索地点"
+            android:textColor="@color/qianhui" />
+
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/qianhui_88" />
+
+        <Button
+            android:id="@+id/moreButton"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/mbox_down_btn_nor" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_head2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="图层："
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/commonButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background"
+            android:text="普通"
+            android:textColor="@color/blue_color" />
+
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/qianhui_88" />
+
+        <Button
+            android:id="@+id/satelliteButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background"
+            android:text="卫星" />
+
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/qianhui_88" />
+
+        <Button
+            android:id="@+id/trafficButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background"
+            android:text="交通" />
+
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/qianhui_88" />
+
+        <Button
+            android:id="@+id/thermalButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background"
+            android:text="热力" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="99" >
+
+        <com.baidu.mapapi.map.MapView
+            android:id="@+id/bmapView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:clickable="true" />
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="55dip"
+            android:background="@drawable/navi_idle_gps_locked" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/RL_Route"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background"
+            android:clickable="true" >
+
+            <View
+                android:id="@+id/centerView1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@id/centerView1"
+                android:gravity="center"
+                android:text="路线" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignRight="@id/centerView1"
+                android:layout_marginRight="4dp"
+                android:src="@drawable/tips_route" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/RL_Navi"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background"
+            android:clickable="true" >
+
+            <View
+                android:id="@+id/centerView2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@id/centerView2"
+                android:gravity="center"
+                android:text="出行" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignRight="@id/centerView2"
+                android:layout_marginRight="4dp"
+                android:src="@drawable/tips_navi" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/RL_Nearby"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_background"
+            android:clickable="true" >
+
+            <View
+                android:id="@+id/centerView3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@id/centerView3"
+                android:gravity="center"
+                android:text="附近" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignRight="@id/centerView3"
+                android:layout_marginRight="4dp"
+                android:src="@drawable/tips_nearby" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
