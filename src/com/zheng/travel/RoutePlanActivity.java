@@ -25,6 +25,7 @@ import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.zheng.travel.R.string;
 import com.zheng.travel.utils.MyLog;
 
 public class RoutePlanActivity extends Activity implements
@@ -59,10 +60,11 @@ public class RoutePlanActivity extends Activity implements
 		MyLog.printLd("-------", "routeSearchRecordNumber------------>"
 				+ routeSearchRecordNumber);
 		if (routeSearchRecordNumber > 0) {
-			String rSR[] = null;
-			for (int i = 0; i < routeSearchRecordNumber; i++) {
-				MyLog.printLd("-------", "i------------>" + i);
-				rSR[i] = sp.getString("rSR" + i + 1, "始->终");
+			String rSR[] = new String[routeSearchRecordNumber+1];
+			for (int i = 0; i < routeSearchRecordNumber+1; i++) {
+				MyLog.printLd("--routeSearchRecordNumber--", "rSR" + i
+						+ "------------>" + sp.getString("rSR" + i, "始->终"));
+				rSR[i] = sp.getString("rSR" + i, "始->终");
 			}
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 					android.R.layout.simple_list_item_1, rSR);
