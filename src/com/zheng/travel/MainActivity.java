@@ -3,9 +3,13 @@ package com.zheng.travel;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -22,6 +26,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -39,6 +44,7 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.zheng.travel.utils.MyLog;
 
 public class MainActivity extends Activity implements
 		OnGetGeoCoderResultListener {
@@ -74,6 +80,24 @@ public class MainActivity extends Activity implements
 	float zoomLevel = (float) 15.0;// 设置地图级别
 	GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
 
+	private SDKReceiver mReceiver;
+
+	/**************************************************************
+	 * 构造广播监听类，监听 SDK key 验证以及网络异常广播
+	 *************************************************************/
+	public class SDKReceiver extends BroadcastReceiver {
+		public void onReceive(Context context, Intent intent) {
+			String s = intent.getAction();
+			if (s.equals(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR)) {
+				// text.setText("key 验证出错! 请在 AndroidManifest.xml 文件中检查 key 设置");
+			} else if (s
+					.equals(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR)) {
+				// text.setText("网络出错");
+				Toast.makeText(getApplicationContext(), "网络出错", 0).show();
+			}
+		}
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,6 +105,18 @@ public class MainActivity extends Activity implements
 		setContentView(R.layout.activity_main);
 		initOtherView();
 		initMap();
+		registerMapSDKBroadcast();
+	}
+
+	/**************************************************************
+	 * 注册 SDK 广播监听者
+	 *************************************************************/
+	protected void registerMapSDKBroadcast() {
+		IntentFilter iFilter = new IntentFilter();
+		iFilter.addAction(SDKInitializer.SDK_BROADTCAST_ACTION_STRING_PERMISSION_CHECK_ERROR);
+		iFilter.addAction(SDKInitializer.SDK_BROADCAST_ACTION_STRING_NETWORK_ERROR);
+		mReceiver = new SDKReceiver();
+		registerReceiver(mReceiver, iFilter);
 	}
 
 	/**************************************************************
@@ -352,6 +388,7 @@ public class MainActivity extends Activity implements
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				mBaiduMap.animateMapStatus(u);
 			}
+
 		}
 
 		public void onReceivePoi(BDLocation poiLocation) {
@@ -396,7 +433,7 @@ public class MainActivity extends Activity implements
 		});
 
 		dialog = builder.create();
-		dialog.setCancelable(false);
+		// dialog.setCancelable(false);
 		dialog.setView(view, 0, 0, 0, 0);
 		dialog.show();
 	}
@@ -418,6 +455,8 @@ public class MainActivity extends Activity implements
 
 	@Override
 	protected void onDestroy() {
+		// 取消监听 SDK 广播
+		unregisterReceiver(mReceiver);
 		// 退出时销毁定位
 		mLocClient.stop();
 		// 关闭定位图层

@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue_color"
@@ -10,33 +9,49 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".GuideActivity" >
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_centerInParent="true" />
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blue_color" >
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/textView"
+            android:layout_centerHorizontal="true"
+            android:text="出行在手"
+            android:textColor="@color/white"
+            android:textSize="33sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:text="出门无忧"
+            android:textColor="@color/white"
+            android:textSize="33sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/textView"
-        android:layout_centerHorizontal="true"
-        android:text="出行在手"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="Z工作室   2014-12-23"
         android:textColor="@color/white"
-        android:textSize="33sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:text="出门无忧"
-        android:textColor="@color/white"
-        android:textSize="33sp"
-        android:textStyle="bold" />
+        android:textSize="14sp" />
 
 </RelativeLayout>
