@@ -42,7 +42,12 @@
             android:name="com.zheng.travel.RoutePlanActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_route_plan"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.zheng.travel.PointSearchActivity"
+            android:label="@string/title_activity_point_search" >
         </activity>
     </application>
 

@@ -2,12 +2,15 @@ package com.zheng.travel;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -25,7 +28,7 @@ import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
-import com.zheng.travel.R.string;
+import com.zheng.travel.adapter.RSListViewAdapter;
 import com.zheng.travel.utils.MyLog;
 
 public class RoutePlanActivity extends Activity implements
@@ -35,42 +38,112 @@ public class RoutePlanActivity extends Activity implements
 	private ImageView transit;
 	private ImageView drive;
 	private ImageView walk;
+	private EditText editSt;
+	private EditText editEn;
 	private RoutePlanSearch mSearch = null; // 搜索模块，也可去掉地图模块独立使用
 	private int selectType = 2;
 	private ProgressDialog pd;
 	private SharedPreferences sp;
 	private ListView lv_location_query;
+	private RSListViewAdapter myRSListViewAdapter;
+
+	private String TAG = "RoutePlanActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_route_plan);
-
+		sp = getSharedPreferences("config", MODE_PRIVATE);
+		
 		transit = (ImageView) findViewById(R.id.transit);
 		drive = (ImageView) findViewById(R.id.drive);
 		walk = (ImageView) findViewById(R.id.walk);
 		lv_location_query = (ListView) findViewById(R.id.lv_location_query);
+		editSt = (EditText) findViewById(R.id.start);
+		editEn = (EditText) findViewById(R.id.end);
+		// 起点终点输入点击事件
+		editSt.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(RoutePlanActivity.this,
+						PointSearchActivity.class);
+				startActivity(intent);
+			}
+		});
+		editEn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+		// 设置ListView条目点击的事件监听器
+		lv_location_query.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				String rSR = sp.getString("rSR" + position, "始->终");
+				String[] strarray = rSR.split("->");
+				editSt.setText(strarray[0]);
+				editEn.setText(strarray[1]);
+			}
+		});
 		// 初始化搜索模块，注册事件监听
 		mSearch = RoutePlanSearch.newInstance();
 		mSearch.setOnGetRoutePlanResultListener(this);
-		sp = getSharedPreferences("config", MODE_PRIVATE);
+		
 
+		setRouteSearchListView();
+	}
+
+	/***********************************************************************************
+	 * 设置路线搜索ListView的显示
+	 **********************************************************************************/
+	protected void setRouteSearchListView() {
+		// 获取sp保存的路线搜索记录总数
 		int routeSearchRecordNumber = sp.getInt("routeSearchRecordNumber", 0);
-		MyLog.printLd("-------", "routeSearchRecordNumber------------>"
-				+ routeSearchRecordNumber);
+		// 存在路线搜索记录数
 		if (routeSearchRecordNumber > 0) {
-			String rSR[] = new String[routeSearchRecordNumber+1];
-			for (int i = 0; i < routeSearchRecordNumber+1; i++) {
-				MyLog.printLd("--routeSearchRecordNumber--", "rSR" + i
-						+ "------------>" + sp.getString("rSR" + i, "始->终"));
+			// 生成长度为routeSearchRecordNumber + 1的数组，给Adapter提供数据
+			String rSR[] = new String[routeSearchRecordNumber + 1];
+			// 读取sp中的所有rSRx 字符数据
+			for (int i = 0; i < routeSearchRecordNumber + 1; i++) {
 				rSR[i] = sp.getString("rSR" + i, "始->终");
 			}
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-					android.R.layout.simple_list_item_1, rSR);
-			lv_location_query.setAdapter(adapter);
+			// 设置Adapter
+			myRSListViewAdapter = new RSListViewAdapter(this, rSR);
+			// ListView关联Adapter
+			lv_location_query.setAdapter(myRSListViewAdapter);
 		}
+	}
 
+	/***********************************************************************************
+	 * 保存路线搜索到sp
+	 **********************************************************************************/
+	protected void saveRouteSearch(String str_editSt, String str_editEn) {
+		// 获取sp保存的路线搜索记录总数
+		int routeSearchRecordNumber = sp.getInt("routeSearchRecordNumber", 0);
+		boolean have = true;// 决定是否保存数据的标记
+		if (routeSearchRecordNumber >= 0) {
+			String rSR;
+			// 比较、判断sp中是否存在相同的搜索记录
+			for (int i = 0; i <= routeSearchRecordNumber; i++) {
+				rSR = sp.getString("rSR" + i, "始->终");
+				if (rSR.equals(str_editSt + "->" + str_editEn)) {
+					have = false;
+				}
+			}
+		}
+		if (have) {// 保存搜索记录
+			// 搜索记录总数加一保存，保存新的搜索记录
+			routeSearchRecordNumber++;
+			Editor editor = sp.edit();
+			editor.putInt("routeSearchRecordNumber", routeSearchRecordNumber);
+			editor.putString("rSR" + routeSearchRecordNumber, str_editSt + "->"
+					+ str_editEn);
+			editor.commit();
+		}
 	}
 
 	/***********************************************************************************
@@ -96,8 +169,7 @@ public class RoutePlanActivity extends Activity implements
 		} else if (v.getId() == R.id.back) {// 返回
 			finish();
 		} else if (v.getId() == R.id.bt_route_exchange) {// 终始点互换
-			EditText editSt = (EditText) findViewById(R.id.start);
-			EditText editEn = (EditText) findViewById(R.id.end);
+
 			String str_editSt = editSt.getText().toString();
 			String str_editEn = editEn.getText().toString();
 			editSt.setText(str_editEn);
@@ -109,8 +181,6 @@ public class RoutePlanActivity extends Activity implements
 			pd.show();
 
 			// 处理搜索按钮响应
-			EditText editSt = (EditText) findViewById(R.id.start);
-			EditText editEn = (EditText) findViewById(R.id.end);
 			String str_editSt = editSt.getText().toString();
 			String str_editEn = editEn.getText().toString();
 			// 设置起终点信息，对于tranist search 来说，城市名无意义
@@ -136,27 +206,7 @@ public class RoutePlanActivity extends Activity implements
 				break;
 			}
 
-			int routeSearchRecordNumber = sp.getInt("routeSearchRecordNumber",
-					0);
-			boolean have = true;
-			if (routeSearchRecordNumber >= 0) {
-				String rSR;
-				for (int i = 0; i <= routeSearchRecordNumber; i++) {
-					rSR = sp.getString("rSR" + i, "始->终");
-					if (rSR.equals(str_editSt + "->" + str_editEn)) {
-						have = false;
-					}
-				}
-			}
-			if (have) {
-				routeSearchRecordNumber++;
-				Editor editor = sp.edit();
-				editor.putInt("routeSearchRecordNumber",
-						routeSearchRecordNumber);
-				editor.putString("rSR" + routeSearchRecordNumber, str_editSt
-						+ "->" + str_editEn);
-				editor.commit();
-			}
+			saveRouteSearch(str_editSt, str_editEn);
 
 		}
 	}

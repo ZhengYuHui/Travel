@@ -98,6 +98,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:focusable="false"
                     android:text="天河客运站" >
 
                     <requestFocus />
@@ -122,6 +123,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:focusable="false"
                     android:text="龙洞步行街" >
 
                     <requestFocus />
