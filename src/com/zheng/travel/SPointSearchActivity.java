@@ -1,8 +1,7 @@
 package com.zheng.travel;
 
-import com.zheng.travel.adapter.RSListViewAdapter;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -11,14 +10,16 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
-public class PointSearchActivity extends Activity {
+import com.zheng.travel.adapter.RSListViewAdapter;
 
-	private String TAG = "PointSearchActivity";
+public class SPointSearchActivity extends Activity {
+
+	private String TAG = "SPointSearchActivity";
 	private SharedPreferences sp;
 	private EditText ed_startPoint;
 	private ListView lv_startPoint;
@@ -54,14 +55,18 @@ public class PointSearchActivity extends Activity {
 			String str_startPoint = ed_startPoint.getText().toString();
 			// 判断输入是否为空
 			if (str_startPoint.trim().isEmpty()) {
-				Toast.makeText(PointSearchActivity.this, "输入不能为空", 1).show();
+				Toast.makeText(SPointSearchActivity.this, "输入不能为空", 1).show();
 				Animation shake = AnimationUtils.loadAnimation(
-						PointSearchActivity.this, R.anim.shake);
+						SPointSearchActivity.this, R.anim.shake);
 				ed_startPoint.startAnimation(shake);
 			} else {
 				saveRouteSearch(str_startPoint);
+                Intent intent = new Intent(); //数据是使用Intent返回
+                intent.putExtra("str_startPoint", str_startPoint);//把返回数据存入Intent
+                SPointSearchActivity.this.setResult(RESULT_OK, intent); //设置返回数据
+                SPointSearchActivity.this.finish();//关闭Activity
 			}
-			setRouteSearchListView(false);
+			//setRouteSearchListView(false);
 		} else if (v.getId() == R.id.ps_back) {// 返回
 			finish();
 		}

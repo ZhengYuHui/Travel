@@ -46,8 +46,12 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.zheng.travel.PointSearchActivity"
+            android:name="com.zheng.travel.SPointSearchActivity"
             android:label="@string/title_activity_point_search" >
+        </activity>
+        <activity
+            android:name="com.zheng.travel.EPointSearchActivity"
+            android:label="@string/title_activity_epoint_search" >
         </activity>
     </application>
 

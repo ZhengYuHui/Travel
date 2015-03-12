@@ -55,7 +55,7 @@ public class RoutePlanActivity extends Activity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_route_plan);
 		sp = getSharedPreferences("config", MODE_PRIVATE);
-		
+
 		transit = (ImageView) findViewById(R.id.transit);
 		drive = (ImageView) findViewById(R.id.drive);
 		walk = (ImageView) findViewById(R.id.walk);
@@ -66,15 +66,15 @@ public class RoutePlanActivity extends Activity implements
 		editSt.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(RoutePlanActivity.this,
-						PointSearchActivity.class);
-				startActivity(intent);
+				startActivityForResult(new Intent(RoutePlanActivity.this,
+						SPointSearchActivity.class), 1);
 			}
 		});
 		editEn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				startActivityForResult(new Intent(RoutePlanActivity.this,
+						EPointSearchActivity.class), 2);
 			}
 		});
 		// 设置ListView条目点击的事件监听器
@@ -92,9 +92,23 @@ public class RoutePlanActivity extends Activity implements
 		// 初始化搜索模块，注册事件监听
 		mSearch = RoutePlanSearch.newInstance();
 		mSearch.setOnGetRoutePlanResultListener(this);
-		
 
 		setRouteSearchListView();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		String result;
+		switch (requestCode) {
+		case 1: // 起始地点
+			result = data.getExtras().getString("str_startPoint");
+			editSt.setText(result);
+			break;
+		case 2: // 目标地点
+			result = data.getExtras().getString("str_endPoint");
+			editEn.setText(result);
+			break;
+		}
 	}
 
 	/***********************************************************************************
