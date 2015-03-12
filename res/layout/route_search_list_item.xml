@@ -16,12 +16,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="9dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="20dp"
         android:layout_toRightOf="@id/iv_1"
         android:text="天河客运站  --> 龙洞步行街"
         android:textColor="@color/qianhui"
-        android:textSize="20sp" />
+        android:textSize="21sp" />
 
 </RelativeLayout>

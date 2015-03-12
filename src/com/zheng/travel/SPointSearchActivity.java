@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -13,17 +15,28 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.zheng.travel.adapter.RSListViewAdapter;
+import com.zheng.travel.utils.MyLog;
 
-public class SPointSearchActivity extends Activity {
+public class SPointSearchActivity extends Activity implements
+		OnGetSuggestionResultListener {
 
 	private String TAG = "SPointSearchActivity";
 	private SharedPreferences sp;
 	private EditText ed_startPoint;
 	private ListView lv_startPoint;
+	private ProgressBar pb_search;
 	private RSListViewAdapter myRSListViewAdapter;
+
+	private SuggestionSearch mSuggestionSearch = null;
+	String spSRAllSuggestions[];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +45,77 @@ public class SPointSearchActivity extends Activity {
 		setContentView(R.layout.activity_point_search);
 		sp = getSharedPreferences("config", MODE_PRIVATE);
 
+		mSuggestionSearch = SuggestionSearch.newInstance();
+		mSuggestionSearch.setOnGetSuggestionResultListener(this);
+
+		pb_search = (ProgressBar) findViewById(R.id.pb_search);
 		ed_startPoint = (EditText) findViewById(R.id.ed_startPoint);
+		ed_startPoint.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (ed_startPoint.getText().toString().trim().isEmpty()) {
+					setRouteSearchListView(false);
+				} else {
+					// 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
+					mSuggestionSearch
+							.requestSuggestion((new SuggestionSearchOption())
+									.keyword(ed_startPoint.getText().toString())
+									.city(""));
+					pb_search.setVisibility(View.VISIBLE);
+				}
+			}
+		});
+
 		lv_startPoint = (ListView) findViewById(R.id.lv_startPoint);
 		// 设置ListView条目点击的事件监听器
 		lv_startPoint.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				ed_startPoint.setText(sp.getString("spSR" + position, "起始地点"));
+				if (ed_startPoint.getText().toString().trim().isEmpty()) {
+					ed_startPoint.setText(sp.getString("spSR" + position,
+							"起始地点"));
+				} else {
+					ed_startPoint.setText(spSRAllSuggestions[position]);
+				}
 			}
 		});
 
 		setRouteSearchListView(true);
+	}
+
+	@Override
+	public void onGetSuggestionResult(SuggestionResult res) {
+
+		if (res == null || res.getAllSuggestions() == null) {
+			spSRAllSuggestions = new String[0];
+			myRSListViewAdapter.updateListView(spSRAllSuggestions);
+			return;
+		}
+		spSRAllSuggestions = new String[res.getAllSuggestions().size()];
+		int i = 0;
+		for (SuggestionResult.SuggestionInfo info : res.getAllSuggestions()) {
+			if (info.key != null) {
+				MyLog.printLi(TAG, "info.key----->" + info.key);
+				spSRAllSuggestions[i] = info.key;
+				i++;
+			}
+		}
+		myRSListViewAdapter.updateListView(spSRAllSuggestions);
+		pb_search.setVisibility(View.GONE);
 	}
 
 	/***********************************************************************************
@@ -61,12 +133,12 @@ public class SPointSearchActivity extends Activity {
 				ed_startPoint.startAnimation(shake);
 			} else {
 				saveRouteSearch(str_startPoint);
-                Intent intent = new Intent(); //数据是使用Intent返回
-                intent.putExtra("str_startPoint", str_startPoint);//把返回数据存入Intent
-                SPointSearchActivity.this.setResult(RESULT_OK, intent); //设置返回数据
-                SPointSearchActivity.this.finish();//关闭Activity
+				Intent intent = new Intent(); // 数据是使用Intent返回
+				intent.putExtra("str_startPoint", str_startPoint);// 把返回数据存入Intent
+				SPointSearchActivity.this.setResult(RESULT_OK, intent); // 设置返回数据
+				SPointSearchActivity.this.finish();// 关闭Activity
 			}
-			//setRouteSearchListView(false);
+			// setRouteSearchListView(false);
 		} else if (v.getId() == R.id.ps_back) {// 返回
 			finish();
 		}
