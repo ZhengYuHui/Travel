@@ -59,7 +59,7 @@ public class RoutePlanActivity extends Activity implements
 		transit = (ImageView) findViewById(R.id.transit);
 		drive = (ImageView) findViewById(R.id.drive);
 		walk = (ImageView) findViewById(R.id.walk);
-		lv_location_query = (ListView) findViewById(R.id.lv_location_query);
+
 		editSt = (EditText) findViewById(R.id.start);
 		editEn = (EditText) findViewById(R.id.end);
 		// 起点终点输入点击事件
@@ -77,6 +77,12 @@ public class RoutePlanActivity extends Activity implements
 						EPointSearchActivity.class), 2);
 			}
 		});
+
+		lv_location_query = (ListView) findViewById(R.id.lv_location_query);
+		// 设置Adapter
+		myRSListViewAdapter = new RSListViewAdapter(this, new String[0]);
+		// ListView关联Adapter
+		lv_location_query.setAdapter(myRSListViewAdapter);
 		// 设置ListView条目点击的事件监听器
 		lv_location_query.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -101,12 +107,16 @@ public class RoutePlanActivity extends Activity implements
 		String result;
 		switch (requestCode) {
 		case 1: // 起始地点
-			result = data.getExtras().getString("str_startPoint");
-			editSt.setText(result);
+			if (data != null) {
+				result = data.getExtras().getString("str_startPoint");
+				editSt.setText(result);
+			}
 			break;
 		case 2: // 目标地点
-			result = data.getExtras().getString("str_endPoint");
-			editEn.setText(result);
+			if (data != null) {
+				result = data.getExtras().getString("str_endPoint");
+				editEn.setText(result);
+			}
 			break;
 		}
 	}
@@ -125,10 +135,7 @@ public class RoutePlanActivity extends Activity implements
 			for (int i = 0; i < routeSearchRecordNumber + 1; i++) {
 				rSR[i] = sp.getString("rSR" + i, "始->终");
 			}
-			// 设置Adapter
-			myRSListViewAdapter = new RSListViewAdapter(this, rSR);
-			// ListView关联Adapter
-			lv_location_query.setAdapter(myRSListViewAdapter);
+			myRSListViewAdapter.updateListView(rSR);
 		}
 	}
 

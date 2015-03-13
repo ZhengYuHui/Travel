@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -13,16 +15,27 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.zheng.travel.adapter.RSListViewAdapter;
+import com.zheng.travel.utils.MyLog;
 
-public class EPointSearchActivity extends Activity {
+public class EPointSearchActivity extends Activity implements
+		OnGetSuggestionResultListener {
 	private String TAG = "EPointSearchActivity";
 	private SharedPreferences sp;
 	private EditText ed_endPoint;
 	private ListView lv_endPoint;
+	private ProgressBar pb_search;
 	private RSListViewAdapter myRSListViewAdapter;
+
+	private SuggestionSearch mSuggestionSearch = null;
+	private String epSRAllSuggestions[];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +44,84 @@ public class EPointSearchActivity extends Activity {
 		setContentView(R.layout.activity_epoint_search);
 		sp = getSharedPreferences("config", MODE_PRIVATE);
 
+		mSuggestionSearch = SuggestionSearch.newInstance();
+		mSuggestionSearch.setOnGetSuggestionResultListener(this);
+
+		pb_search = (ProgressBar) findViewById(R.id.pb_search);
 		ed_endPoint = (EditText) findViewById(R.id.ed_endPoint);
+		// EditText输入监听事件
+		ed_endPoint.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				// EditText输入为空，ListView显示sp保存的搜索记录
+				if (ed_endPoint.getText().toString().trim().isEmpty()) {
+					setRouteSearchListView();
+				} else {// EditText输入不为空，ListView显示建议列表
+					// 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
+					mSuggestionSearch
+							.requestSuggestion((new SuggestionSearchOption())
+									.keyword(ed_endPoint.getText().toString())
+									.city(""));
+					// 显示ProgressBar提示搜索中
+					pb_search.setVisibility(View.VISIBLE);
+				}
+			}
+		});
+
 		lv_endPoint = (ListView) findViewById(R.id.lv_endPoint);
+		myRSListViewAdapter = new RSListViewAdapter(this, new String[0]);// 设置Adapter
+		lv_endPoint.setAdapter(myRSListViewAdapter); // ListView关联Adapter
 		// 设置ListView条目点击的事件监听器
 		lv_endPoint.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				ed_endPoint.setText(sp.getString("epSR" + position, "目标地点"));
+				if (ed_endPoint.getText().toString().trim().isEmpty()) {
+					ed_endPoint.setText(sp.getString("epSR" + position, "目标地点"));
+				} else {
+					ed_endPoint.setText(epSRAllSuggestions[position]);
+				}
 			}
 		});
 
-		setRouteSearchListView(true);
+		setRouteSearchListView();
+	}
+
+	/***********************************************************************************
+	 * 返回建议搜索服务的结果
+	 **********************************************************************************/
+	@Override
+	public void onGetSuggestionResult(SuggestionResult res) {
+		// 建议结果为空，传入空数组，listview不显示
+		if (res == null || res.getAllSuggestions() == null) {
+			epSRAllSuggestions = new String[0];
+			myRSListViewAdapter.updateListView(epSRAllSuggestions);
+			pb_search.setVisibility(View.GONE);
+			return;
+		}
+		// 建议结果不为空，传入结果size大小的数组，listview显示建议结果
+		epSRAllSuggestions = new String[res.getAllSuggestions().size()];
+		int i = 0;
+		for (SuggestionResult.SuggestionInfo info : res.getAllSuggestions()) {
+			if (info.key != null) {
+				MyLog.printLi(TAG, "info.key----->" + info.key);
+				epSRAllSuggestions[i] = info.key;
+				i++;
+			}
+		}
+		myRSListViewAdapter.updateListView(epSRAllSuggestions);
+		pb_search.setVisibility(View.GONE);
 	}
 
 	/***********************************************************************************
@@ -72,9 +151,9 @@ public class EPointSearchActivity extends Activity {
 	}
 
 	/***********************************************************************************
-	 * 设置路线搜索ListView的显示(mode为true：生成Adapter ；mode为false：更新Adapter)
+	 * 设置路线搜索ListView的显示
 	 **********************************************************************************/
-	protected void setRouteSearchListView(boolean mode) {
+	protected void setRouteSearchListView() {
 		// 获取sp保存的起始地点搜索记录总数
 		int ePointSearchRecordNumber = sp.getInt("EPointSearchRecordNumber", 0);
 		// 存在起始地点搜索记录数
@@ -85,14 +164,7 @@ public class EPointSearchActivity extends Activity {
 			for (int i = 0; i < ePointSearchRecordNumber + 1; i++) {
 				epSR[i] = sp.getString("epSR" + i, "目标地点");
 			}
-			if (mode) {
-				// 设置Adapter
-				myRSListViewAdapter = new RSListViewAdapter(this, epSR);
-				// ListView关联Adapter
-				lv_endPoint.setAdapter(myRSListViewAdapter);
-			} else {
-				myRSListViewAdapter.updateListView(epSR);
-			}
+			myRSListViewAdapter.updateListView(epSR);
 		}
 	}
 
@@ -107,7 +179,7 @@ public class EPointSearchActivity extends Activity {
 			String epSR;
 			// 比较、判断sp中是否存在相同的搜索记录
 			for (int i = 0; i <= ePointSearchRecordNumber; i++) {
-				epSR = sp.getString("epSR" + i, "起始地点");
+				epSR = sp.getString("epSR" + i, "目标地点");
 				if (epSR.equals(str)) {
 					have = false;
 				}

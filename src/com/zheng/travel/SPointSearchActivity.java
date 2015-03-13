@@ -36,7 +36,7 @@ public class SPointSearchActivity extends Activity implements
 	private RSListViewAdapter myRSListViewAdapter;
 
 	private SuggestionSearch mSuggestionSearch = null;
-	String spSRAllSuggestions[];
+	private String spSRAllSuggestions[];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class SPointSearchActivity extends Activity implements
 
 		pb_search = (ProgressBar) findViewById(R.id.pb_search);
 		ed_startPoint = (EditText) findViewById(R.id.ed_startPoint);
+		// EditText输入监听事件
 		ed_startPoint.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -66,20 +67,24 @@ public class SPointSearchActivity extends Activity implements
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				// EditText输入为空，ListView显示sp保存的搜索记录
 				if (ed_startPoint.getText().toString().trim().isEmpty()) {
-					setRouteSearchListView(false);
-				} else {
+					setRouteSearchListView();
+				} else {// EditText输入不为空，ListView显示建议列表
 					// 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
 					mSuggestionSearch
 							.requestSuggestion((new SuggestionSearchOption())
 									.keyword(ed_startPoint.getText().toString())
 									.city(""));
+					// 显示ProgressBar提示搜索中
 					pb_search.setVisibility(View.VISIBLE);
 				}
 			}
 		});
 
 		lv_startPoint = (ListView) findViewById(R.id.lv_startPoint);
+		myRSListViewAdapter = new RSListViewAdapter(this, new String[0]);// 设置Adapter
+		lv_startPoint.setAdapter(myRSListViewAdapter); // ListView关联Adapter
 		// 设置ListView条目点击的事件监听器
 		lv_startPoint.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -94,17 +99,22 @@ public class SPointSearchActivity extends Activity implements
 			}
 		});
 
-		setRouteSearchListView(true);
+		setRouteSearchListView();
 	}
 
+	/***********************************************************************************
+	 * 返回建议搜索服务的结果
+	 **********************************************************************************/
 	@Override
 	public void onGetSuggestionResult(SuggestionResult res) {
-
+		// 建议结果为空，传入空数组，listview不显示
 		if (res == null || res.getAllSuggestions() == null) {
 			spSRAllSuggestions = new String[0];
 			myRSListViewAdapter.updateListView(spSRAllSuggestions);
+			pb_search.setVisibility(View.GONE);
 			return;
 		}
+		// 建议结果不为空，传入结果size大小的数组，listview显示建议结果
 		spSRAllSuggestions = new String[res.getAllSuggestions().size()];
 		int i = 0;
 		for (SuggestionResult.SuggestionInfo info : res.getAllSuggestions()) {
@@ -147,7 +157,7 @@ public class SPointSearchActivity extends Activity implements
 	/***********************************************************************************
 	 * 设置路线搜索ListView的显示(mode为true：生成Adapter ；mode为false：更新Adapter)
 	 **********************************************************************************/
-	protected void setRouteSearchListView(boolean mode) {
+	protected void setRouteSearchListView() {
 		// 获取sp保存的起始地点搜索记录总数
 		int sPointSearchRecordNumber = sp.getInt("SPointSearchRecordNumber", 0);
 		// 存在起始地点搜索记录数
@@ -158,14 +168,7 @@ public class SPointSearchActivity extends Activity implements
 			for (int i = 0; i < sPointSearchRecordNumber + 1; i++) {
 				spSR[i] = sp.getString("spSR" + i, "起始地点");
 			}
-			if (mode) {
-				// 设置Adapter
-				myRSListViewAdapter = new RSListViewAdapter(this, spSR);
-				// ListView关联Adapter
-				lv_startPoint.setAdapter(myRSListViewAdapter);
-			} else {
-				myRSListViewAdapter.updateListView(spSR);
-			}
+			myRSListViewAdapter.updateListView(spSR);
 		}
 	}
 
