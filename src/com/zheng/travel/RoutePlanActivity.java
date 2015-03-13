@@ -249,6 +249,11 @@ public class RoutePlanActivity extends Activity implements
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
 
+			Intent intent = new Intent();
+			intent.putExtra("selectType", selectType);
+			intent.setClass(RoutePlanActivity.this, RouteResultsActivity.class);
+			startActivity(intent);
+			
 			System.out.println("RouteLinesSize----"
 					+ result.getRouteLines().size());
 

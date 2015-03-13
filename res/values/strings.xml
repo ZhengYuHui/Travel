@@ -8,5 +8,6 @@
     <string name="title_activity_route_plan">RoutePlanActivity</string>
     <string name="title_activity_point_search">PointSearchActivity</string>
     <string name="title_activity_epoint_search">EPointSearchActivity</string>
+    <string name="title_activity_route_results">RouteResultsActivity</string>
 
 </resources>

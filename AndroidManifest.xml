@@ -53,6 +53,10 @@
             android:name="com.zheng.travel.EPointSearchActivity"
             android:label="@string/title_activity_epoint_search" >
         </activity>
+        <activity
+            android:name="com.zheng.travel.RouteResultsActivity"
+            android:label="@string/title_activity_route_results" >
+        </activity>
     </application>
 
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >
