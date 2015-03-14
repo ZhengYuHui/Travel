@@ -8,18 +8,17 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.zheng.travel.R;
+import com.zheng.travel.utils.MyLog;
 
-public class RouteListAdapter extends BaseAdapter {
+public class RLStepListViewAdapter extends BaseAdapter {
 
-	private static final String TAG = "RouteListAdapter";
+	private static final String TAG = "RLStepListViewAdapter";
 	private Context context;
-	private String rSRLine[];
-	private String rSRTime[];
+	private String rSR[];
 
-	public RouteListAdapter(Context context, String rSRLine[], String rSRTime[]) {
+	public RLStepListViewAdapter(Context context, String rSR[]) {
 		this.context = context;
-		this.rSRLine = rSRLine;
-		this.rSRTime = rSRTime;
+		this.rSR = rSR;
 	}
 
 	/****************************************************
@@ -27,7 +26,7 @@ public class RouteListAdapter extends BaseAdapter {
 	 *****************************************************/
 	@Override
 	public int getCount() {
-		return rSRLine.length;
+		return rSR.length;
 	}
 
 	/****************************************************
@@ -56,31 +55,28 @@ public class RouteListAdapter extends BaseAdapter {
 		ViewHolder holder;
 		// 判断缓存对象是否为null, 不为null时已经缓存了对象
 		if (convertView == null) {
+			MyLog.printLi(TAG, "getView: 新建" + position);
 			// 布局填充器对象, 用于把xml布局转换成view对象
 			LayoutInflater inflater = LayoutInflater.from(context);
-			view = inflater.inflate(R.layout.route_list_item, null);
+			view = inflater.inflate(R.layout.route_step_item, null);
 			holder = new ViewHolder();
-			holder.tv_line = (TextView) view.findViewById(R.id.tv_line);
-			holder.tv_time = (TextView) view.findViewById(R.id.tv_time);
+			holder.tv_show = (TextView) view.findViewById(R.id.tv_line);
 			view.setTag(holder);
 		} else { // 不为null时 复用缓存对象
+			MyLog.printLi(TAG, "getView: 复用缓存" + position);
 			view = convertView;
 			holder = (ViewHolder) view.getTag();
 		}
-		holder.tv_line.setText(rSRLine[position]);
-		holder.tv_time.setText("(" + rSRTime[position] + ")");
+		holder.tv_show.setText(rSR[position]);
 		return view;
 	}
 
 	static class ViewHolder {
-		TextView tv_line;
-		TextView tv_time;
+		TextView tv_show;
 	}
 
-	public void updateListView(String rSRLine[], String rSRTime[]) {
-		this.rSRLine = rSRLine;
-		this.rSRTime = rSRTime;
+	public void updateListView(String rSR[]) {
+		this.rSR = rSR;
 		this.notifyDataSetChanged();
 	}
-
 }

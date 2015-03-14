@@ -58,17 +58,65 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="15dp"
         android:background="@color/qianhui_88" />
 
-    <ListView
-        android:id="@+id/lv_route_results"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="20dp" >
-    </ListView>
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/tv_noFound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="抱歉，未找到相应结果"
+            android:textSize="23sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_noFound"
+            android:layout_marginTop="6dp"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:onClick="SearchButtonProcess"
+            android:text="点击刷新"
+            android:textColor="@color/blue_color"
+            android:textSize="21sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_callTaxi"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:drawableLeft="@drawable/route_icon_car_hl"
+            android:gravity="center_vertical"
+            android:onClick="SearchButtonProcess"
+            android:singleLine="true"
+            android:text="打的（约23分钟，18元）"
+            android:textSize="21sp"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/lv_route_results"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/tv_callTaxi"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:divider="@color/qianhui_88"
+            android:dividerHeight="6dp"
+            android:visibility="gone" >
+        </ListView>
+    </RelativeLayout>
 
 </LinearLayout>

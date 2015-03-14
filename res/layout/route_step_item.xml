@@ -6,32 +6,23 @@
     <ImageView
         android:id="@+id/iv_1"
         android:layout_width="wrap_content"
-        android:layout_height="70dp"
-        android:layout_centerVertical="true"
+        android:layout_height="match_parent"
         android:layout_marginLeft="2dp"
-        android:src="@drawable/default_common_searchicon_icon_normal" />
+        android:background="@drawable/default_path_pathinfo_foot_normal" />
 
     <TextView
         android:id="@+id/tv_line"
         android:layout_width="wrap_content"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
         android:layout_toRightOf="@id/iv_1"
         android:gravity="center_vertical"
-        android:text="路线1"
+        android:text="路线"
         android:textColor="@color/qianhui"
-        android:textSize="25sp" />
-
-    <TextView
-        android:id="@+id/tv_time"
-        android:layout_width="wrap_content"
-        android:layout_height="70dp"
-        android:layout_alignBaseline="@id/tv_line"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@id/tv_line"
-        android:text="(约耗时16分钟)"
-        android:textColor="@color/qianhui"
-        android:textSize="19sp" />
+        android:textSize="22sp" />
 
 </RelativeLayout>
