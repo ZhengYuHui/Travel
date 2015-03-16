@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.route.DrivingRouteLine;
 import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
@@ -24,6 +25,7 @@ import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteLine;
 import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRouteLine;
 import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.zheng.travel.adapter.RouteListAdapter;
@@ -59,7 +61,7 @@ public class RouteResultsActivity extends Activity implements
 		initView();
 		getResultRoutes();
 		startSearch();
-
+		initImageView();
 	}
 
 	/**********************************************************************************
@@ -86,6 +88,26 @@ public class RouteResultsActivity extends Activity implements
 	}
 
 	/**********************************************************************************
+	 * 初始化顶部的路线类型图标
+	 ********************************************************************************/
+	protected void initImageView() {
+		walk.setBackgroundResource(R.drawable.route_icon_onfoot);
+		transit.setBackgroundResource(R.drawable.route_icon_bus);
+		drive.setBackgroundResource(R.drawable.route_icon_car);
+		switch (selectType) {
+		case 1:
+			drive.setBackgroundResource(R.drawable.route_icon_car_hl);
+			break;
+		case 2:
+			transit.setBackgroundResource(R.drawable.route_icon_bus_hl);
+			break;
+		case 3:
+			walk.setBackgroundResource(R.drawable.route_icon_onfoot_hl);
+			break;
+		}
+	}
+
+	/**********************************************************************************
 	 * 路线方案ListView条目点击
 	 ********************************************************************************/
 	class OnListViewItemClick implements OnItemClickListener {
@@ -98,14 +120,28 @@ public class RouteResultsActivity extends Activity implements
 			String rSRStep[] = new String[y];
 			for (int i = 0; i < y; i++) {
 				Object step = routeLine[position].getAllStep().get(i);
-				rSRStep[i] = ((TransitRouteLine.TransitStep) step)
-						.getInstructions();
+				switch (selectType) {
+				case 1:
+					rSRStep[i] = ((DrivingRouteLine.DrivingStep) step)
+							.getInstructions();
+					break;
+				case 2:
+					rSRStep[i] = ((TransitRouteLine.TransitStep) step)
+							.getInstructions();
+					break;
+				case 3:
+					rSRStep[i] = ((WalkingRouteLine.WalkingStep) step)
+							.getInstructions();
+					break;
+				}
 			}
 			// 跳转到搜索页面
 			Intent intent = new Intent(RouteResultsActivity.this,
 					ShowRouteStepActivity.class);
 			intent.putExtra("str_editSt", str_editSt);
 			intent.putExtra("str_editEn", str_editEn);
+			intent.putExtra("position", (position + 1));
+			intent.putExtra("selectType", selectType);
 			intent.putExtra("rSRStep", rSRStep);
 			startActivity(intent);
 		}
@@ -118,7 +154,7 @@ public class RouteResultsActivity extends Activity implements
 		tv_noFound.setVisibility(View.GONE);
 		tv_refresh.setVisibility(View.GONE);
 		lv_route_results.setVisibility(View.GONE);
-
+		tv_callTaxi.setVisibility(View.GONE);
 		pd = new ProgressDialog(RouteResultsActivity.this);
 		pd.setMessage("努力查询中...请稍等");
 		pd.show();
@@ -217,11 +253,26 @@ public class RouteResultsActivity extends Activity implements
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
 			showDRouteLine(result);
+			saveRouteSearch(str_editSt, str_editEn);// 保存搜索记录
 		}
 	}
 
 	// 显示自驾路线
 	protected void showDRouteLine(DrivingRouteResult result) {
+		MyLog.printLi(TAG, "路线方案总数----" + result.getRouteLines().size());
+
+		String rSRLine[] = new String[result.getRouteLines().size()];
+		String rSRTime[] = new String[result.getRouteLines().size()];
+		routeLine = new RouteLine[result.getRouteLines().size()];
+		for (int ii = 0; ii < result.getRouteLines().size(); ii++) {
+			// 显示所有路线
+			RouteLine myroute = result.getRouteLines().get(ii);
+			routeLine[ii] = myroute;
+			rSRLine[ii] = "路线" + (ii + 1);
+			rSRTime[ii] = myroute.getDuration() + "";
+		}
+		routeListAdapter.updateListView(rSRLine, rSRTime);
+		lv_route_results.setVisibility(View.VISIBLE);
 
 	}
 
@@ -242,11 +293,27 @@ public class RouteResultsActivity extends Activity implements
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
 			showWRouteLine(result);
+			saveRouteSearch(str_editSt, str_editEn);// 保存搜索记录
 		}
 	}
 
 	// 显示步行路线
 	protected void showWRouteLine(WalkingRouteResult result) {
+		MyLog.printLi(TAG, "路线方案总数----" + result.getRouteLines().size());
+
+		String rSRLine[] = new String[result.getRouteLines().size()];
+		String rSRTime[] = new String[result.getRouteLines().size()];
+		routeLine = new RouteLine[result.getRouteLines().size()];
+		for (int ii = 0; ii < result.getRouteLines().size(); ii++) {
+			// 显示所有路线
+			RouteLine myroute = result.getRouteLines().get(ii);
+			routeLine[ii] = myroute;
+			rSRLine[ii] = "路线" + (ii + 1);
+			rSRTime[ii] = myroute.getDuration() + "";
+
+		}
+		routeListAdapter.updateListView(rSRLine, rSRTime);
+		lv_route_results.setVisibility(View.VISIBLE);
 
 	}
 
@@ -275,9 +342,9 @@ public class RouteResultsActivity extends Activity implements
 			startSearch();
 		} else if (v.getId() == R.id.back) {// 返回
 			finish();
-		} else if (v.getId() == R.id.tv_refresh) {// 返回
+		} else if (v.getId() == R.id.tv_refresh) {// 刷新
 			startSearch();
-		} else if (v.getId() == R.id.tv_callTaxi) {// 返回
+		} else if (v.getId() == R.id.tv_callTaxi) {// 打的
 
 		}
 	}
