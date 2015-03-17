@@ -230,11 +230,8 @@ public class RouteResultsActivity extends Activity implements
 			RouteLine myroute = Tresult.getRouteLines().get(ii);
 			routeLine[ii] = myroute;
 			rSRLine[ii] = "路线" + (ii + 1);
-			// rSRTime[ii] = myroute.getDuration() + "";
-
 			rSRTime[ii] = "耗时："
 					+ TransformationTime.secToTime(myroute.getDuration());
-
 		}
 		routeListAdapter.updateListView(rSRLine, rSRTime);
 		lv_route_results.setVisibility(View.VISIBLE);
@@ -281,7 +278,8 @@ public class RouteResultsActivity extends Activity implements
 			RouteLine myroute = result.getRouteLines().get(ii);
 			routeLine[ii] = myroute;
 			rSRLine[ii] = "路线" + (ii + 1);
-			rSRTime[ii] = myroute.getDuration() + "";
+			rSRTime[ii] = "耗时："
+					+ TransformationTime.secToTime(myroute.getDuration());
 		}
 		routeListAdapter.updateListView(rSRLine, rSRTime);
 		lv_route_results.setVisibility(View.VISIBLE);
@@ -322,7 +320,8 @@ public class RouteResultsActivity extends Activity implements
 			RouteLine myroute = result.getRouteLines().get(ii);
 			routeLine[ii] = myroute;
 			rSRLine[ii] = "路线" + (ii + 1);
-			rSRTime[ii] = myroute.getDuration() + "";
+			rSRTime[ii] = "耗时："
+					+ TransformationTime.secToTime(myroute.getDuration());
 		}
 		routeListAdapter.updateListView(rSRLine, rSRTime);
 		lv_route_results.setVisibility(View.VISIBLE);
