@@ -20,7 +20,7 @@ public class ShowRouteStepActivity extends Activity {
 	private String rSRStep[];
 	private String NewrSRStep[];
 	private int selectType;
-
+	private int position;
 	private TextView tv_meg;
 	private ListView lv_route_step;
 	private RLStepListViewAdapter rLStepListViewAdapter;
@@ -56,7 +56,7 @@ public class ShowRouteStepActivity extends Activity {
 		str_editSt = intent.getStringExtra("str_editSt");
 		str_editEn = intent.getStringExtra("str_editEn");
 		selectType = intent.getIntExtra("selectType", 2);
-		int position = intent.getIntExtra("position", 1);
+		position = intent.getIntExtra("position", 1);
 		switch (selectType) {
 		case 1:
 			tv_meg.setText("自驾路线" + position);
@@ -88,7 +88,12 @@ public class ShowRouteStepActivity extends Activity {
 	public void SearchButtonProcess(View v) {
 		// 实际使用中请对起点终点城市进行正确的设定
 		if (v.getId() == R.id.bt_goMap) {// 显示地图
-
+			// 跳转到显示地图路线页面
+			Intent intent = new Intent(ShowRouteStepActivity.this,
+					ShowMapRouteActivity.class);
+			intent.putExtra("selectType", selectType);
+			intent.putExtra("position", position);
+			startActivity(intent);
 		} else if (v.getId() == R.id.back) {// 返回
 			finish();
 		}

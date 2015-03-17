@@ -61,6 +61,10 @@
             android:name="com.zheng.travel.ShowRouteStepActivity"
             android:label="@string/title_activity_show_route_step" >
         </activity>
+        <activity
+            android:name="com.zheng.travel.ShowMapRouteActivity"
+            android:label="@string/title_activity_show_map_route" >
+        </activity>
     </application>
 
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >

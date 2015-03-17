@@ -10,5 +10,6 @@
     <string name="title_activity_epoint_search">EPointSearchActivity</string>
     <string name="title_activity_route_results">RouteResultsActivity</string>
     <string name="title_activity_show_route_step">ShowRouteStepActivity</string>
+    <string name="title_activity_show_map_route">ShowMapRouteActivity</string>
 
 </resources>

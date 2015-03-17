@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:focusable="false"
-                    android:text="天河客运站" >
+                    android:text="岗顶" >
 
                     <requestFocus />
                 </EditText>
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:focusable="false"
-                    android:text="龙洞步行街" >
+                    android:text="火车东站" >
 
                     <requestFocus />
                 </EditText>

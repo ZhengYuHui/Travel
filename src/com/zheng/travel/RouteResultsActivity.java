@@ -9,10 +9,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
@@ -30,6 +30,7 @@ import com.baidu.mapapi.search.route.WalkingRoutePlanOption;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.zheng.travel.adapter.RouteListAdapter;
 import com.zheng.travel.utils.MyLog;
+import com.zheng.travel.utils.TransformationTime;
 
 public class RouteResultsActivity extends Activity implements
 		OnGetRoutePlanResultListener {
@@ -51,6 +52,7 @@ public class RouteResultsActivity extends Activity implements
 	private RoutePlanSearch mSearch = null; // 搜索模块，也可去掉地图模块独立使用
 
 	private RouteLine routeLine[];
+	private DemoApplication demoApplication;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,8 @@ public class RouteResultsActivity extends Activity implements
 	 ********************************************************************************/
 	protected void initView() {
 		sp = getSharedPreferences("config", MODE_PRIVATE);
+		// 获取全局变量类
+		demoApplication = (DemoApplication) getApplication();
 		// 初始化搜索模块，注册事件监听
 		mSearch = RoutePlanSearch.newInstance();
 		mSearch.setOnGetRoutePlanResultListener(this);
@@ -207,7 +211,7 @@ public class RouteResultsActivity extends Activity implements
 			return;
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
-
+			demoApplication.setTresult(result);
 			showTRouteLine(result);
 			saveRouteSearch(str_editSt, str_editEn);// 保存搜索记录
 		}
@@ -226,13 +230,20 @@ public class RouteResultsActivity extends Activity implements
 			RouteLine myroute = Tresult.getRouteLines().get(ii);
 			routeLine[ii] = myroute;
 			rSRLine[ii] = "路线" + (ii + 1);
-			rSRTime[ii] = myroute.getDuration() + "";
+			// rSRTime[ii] = myroute.getDuration() + "";
+
+			rSRTime[ii] = "耗时："
+					+ TransformationTime.secToTime(myroute.getDuration());
 
 		}
 		routeListAdapter.updateListView(rSRLine, rSRTime);
 		lv_route_results.setVisibility(View.VISIBLE);
-		tv_callTaxi.setText("打的：约" + Tresult.getTaxiInfo().getTotalPrice()
-				+ "元; " + " 耗时" + Tresult.getTaxiInfo().getDuration());
+		tv_callTaxi.setText("打的：约"
+				+ Tresult.getTaxiInfo().getTotalPrice()
+				+ "元; "
+				+ " 耗时"
+				+ TransformationTime.secToTime(Tresult.getTaxiInfo()
+						.getDuration()));
 		tv_callTaxi.setVisibility(View.VISIBLE);
 	}
 
@@ -252,6 +263,7 @@ public class RouteResultsActivity extends Activity implements
 			return;
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+			demoApplication.setDresult(result);
 			showDRouteLine(result);
 			saveRouteSearch(str_editSt, str_editEn);// 保存搜索记录
 		}
@@ -292,6 +304,7 @@ public class RouteResultsActivity extends Activity implements
 			return;
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+			demoApplication.setWresult(result);
 			showWRouteLine(result);
 			saveRouteSearch(str_editSt, str_editEn);// 保存搜索记录
 		}
@@ -310,11 +323,9 @@ public class RouteResultsActivity extends Activity implements
 			routeLine[ii] = myroute;
 			rSRLine[ii] = "路线" + (ii + 1);
 			rSRTime[ii] = myroute.getDuration() + "";
-
 		}
 		routeListAdapter.updateListView(rSRLine, rSRTime);
 		lv_route_results.setVisibility(View.VISIBLE);
-
 	}
 
 	/***********************************************************************************
