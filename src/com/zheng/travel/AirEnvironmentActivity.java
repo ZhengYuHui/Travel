@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -22,6 +23,11 @@ public class AirEnvironmentActivity extends Activity {
 	private EditText et_city;
 	private String show_city;
 
+	private View include_4;
+	private ImageView iv_weather_4;
+	private TextView tv_weekDay_4;
+	private TextView tv_temperature_4;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,6 +36,13 @@ public class AirEnvironmentActivity extends Activity {
 		tv_show = (TextView) findViewById(R.id.tv_show);
 		et_city = (EditText) findViewById(R.id.et_city);
 
+		include_4 = findViewById(R.id.include_4); 
+		iv_weather_4=(ImageView) include_4.findViewById(R.id.iv_weather); 
+		tv_weekDay_4=(TextView) include_4.findViewById(R.id.tv_weekDay); 
+		tv_temperature_4=(TextView) include_4.findViewById(R.id.tv_temperature); 
+		tv_weekDay_4.setText("周日");
+		tv_temperature_4.setText("21°/26°");
+		iv_weather_4.setImageResource(R.drawable.weather_icon_sun);
 	}
 
 	public void btOnClick(View v) {
