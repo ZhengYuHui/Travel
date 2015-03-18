@@ -195,6 +195,8 @@ public class MainActivity extends Activity implements
 				startActivity(intent);
 				break;
 			case R.id.RL_Navi:
+				startActivity(new Intent(MainActivity.this,
+						AirEnvironmentActivity.class));
 				break;
 			case R.id.RL_Nearby:
 				break;
