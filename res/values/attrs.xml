@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="TasksCompletedView">
+        <attr name="radiusC" format="dimension" />
+        <attr name="strokeWidthC" format="dimension" />
+        <attr name="strokeColorC" format="color" />
+        <attr name="circleColor" format="color" />
+        <attr name="ringColor" format="color" />
+        <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="textFlagColor" format="color" />
+        <attr name="textFlagSize" format="dimension" />
+        <attr name="textFlagName" format="string" />
+        <attr name="symbolSize" format="dimension" />
+        <attr name="dataSize" format="dimension" />
+        <attr name="dataColor" format="color" />
+        <attr name="showSymbol" format="boolean" />
+        <attr name="showProgressNum" format="boolean" />
+    </declare-styleable>
+
+</resources>

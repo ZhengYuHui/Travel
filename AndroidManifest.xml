@@ -69,6 +69,10 @@
             android:name="com.zheng.travel.AirEnvironmentActivity"
             android:label="@string/title_activity_air_environment" >
         </activity>
+        <activity
+            android:name="com.zheng.travel.AirMonitoringActivity"
+            android:label="@string/title_activity_air_monitoring" >
+        </activity>
     </application>
 
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >

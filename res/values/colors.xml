@@ -33,5 +33,9 @@
     <color name="green_33cc99">#33cc99</color>
     <color name="green_009966">#009966</color>
     <color name="green_00cc99">#00cc99</color>
+    
+    <color name="weather_sun">#FF6633</color>
+    <color name="weather_cloudy">#3366ff</color>
+    <color name="weather_rain">#666699</color>
 
 </resources>

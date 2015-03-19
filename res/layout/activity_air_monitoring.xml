@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tcc="http://schemas.android.com/apk/res/com.zheng.travel"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,49 +7,70 @@
     android:orientation="vertical"
     tools:context=".AirEnvironmentActivity" >
 
-    <RelativeLayout
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="空气质量"
+        android:textSize="21sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/blue_color" />
+
+    <LinearLayout
         android:id="@+id/RL_TodayMsg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="99"
-        android:background="@color/blue_color" >
+        android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/tv_TodayMsgTemp"
+            android:layout_margin="15dp"
+            android:layout_marginBottom="15dp"
+            android:id="@+id/tv_TodayMsgCity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="25C"
-            android:textColor="@color/white"
-            android:textSize="120sp" />
-
-        <TextView
-            android:id="@+id/tv_TodayMsgCity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/tv_TodayMsgTemp"
-            android:layout_centerHorizontal="true"
             android:text="广州市"
-            android:textColor="@color/white"
             android:textSize="21sp" />
+
+        <com.zheng.travel.ui.TasksCompletedView
+            android:id="@+id/tasks_view1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="99"
+            tcc:circleColor="@color/black"
+            tcc:dataColor="@color/black"
+            tcc:dataSize="25sp"
+            tcc:radiusC="80dp"
+            tcc:ringColor="@color/blue_color"
+            tcc:showProgressNum="false"
+            tcc:showSymbol="false"
+            tcc:strokeColorC="@color/qianhui_88"
+            tcc:strokeWidthC="8dip"
+            tcc:symbolSize="10sp"
+            tcc:textColor="@color/blue_color"
+            tcc:textFlagName="PM25"
+            tcc:textFlagSize="23sp"
+            tcc:textSize="60sp" />
 
         <TextView
             android:id="@+id/tv_TodayMsgDetails"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_TodayMsgTemp"
-            android:layout_centerHorizontal="true"
-            android:text="阴   28C ~ 21C"
-            android:textColor="@color/white"
+            android:gravity="center"
+            android:text="轻度污染"
             android:textSize="19sp" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_weight="2"
         android:background="@color/white"
         android:orientation="horizontal" >
@@ -58,31 +80,32 @@
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
-            layout="@layout/weather_list_item" />
-
-        <View
-            android:layout_width="0.8dp"
-            android:layout_height="match_parent"
-            android:background="@color/qianhui_88" />
+            layout="@layout/index_list_item"
+            android:clickable="true" />
 
         <include
             android:id="@+id/include_2"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
-            layout="@layout/weather_list_item" />
-
-        <View
-            android:layout_width="0.8dp"
-            android:layout_height="match_parent"
-            android:background="@color/qianhui_88" />
+            layout="@layout/index_list_item"
+            android:clickable="true" />
 
         <include
             android:id="@+id/include_3"
             android:layout_width="0dp"
             android:layout_height="150dp"
             android:layout_weight="1"
-            layout="@layout/weather_list_item" />
+            layout="@layout/index_list_item"
+            android:clickable="true" />
+
+        <include
+            android:id="@+id/include_4"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_weight="1"
+            layout="@layout/index_list_item"
+            android:clickable="true" />
     </LinearLayout>
 
     <View
@@ -105,26 +128,6 @@
             android:clickable="true"
             android:onClick="ImageViewOnClick"
             android:src="@drawable/e_dog_back" />
-
-        <ImageView
-            android:id="@+id/monitor"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="20dp"
-            android:clickable="true"
-            android:onClick="ImageViewOnClick"
-            android:src="@drawable/tip_memory_abnormal" />
-
-        <ImageView
-            android:id="@+id/add"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="25dp"
-            android:clickable="true"
-            android:onClick="ImageViewOnClick"
-            android:src="@drawable/default_generalsearch_btn_plus_highlight" />
     </RelativeLayout>
 
 </LinearLayout>

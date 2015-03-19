@@ -6,8 +6,22 @@ import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.zheng.travel.domain.Status;
 
 public class DemoApplication extends Application {
+
+	/********************************************
+	 * 天气和空气质量数据
+	 *********************************************/
+	public Status status;
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
 
 	/********************************************
 	 * 公交路线全局变量

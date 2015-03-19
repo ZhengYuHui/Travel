@@ -12,5 +12,6 @@
     <string name="title_activity_show_route_step">ShowRouteStepActivity</string>
     <string name="title_activity_show_map_route">ShowMapRouteActivity</string>
     <string name="title_activity_air_environment">AirEnvironmentActivity</string>
+    <string name="title_activity_air_monitoring">AirMonitoringActivity</string>
 
 </resources>
