@@ -116,6 +116,7 @@ public class AirEnvironmentActivity extends Activity {
 				final String state = NetUtils.GetWeatherJson(strCity);
 				Gson gson = new Gson();
 				final Status status = gson.fromJson(state, Status.class);
+				systemOut(status);
 				// 执行任务在主线程中
 				runOnUiThread(new Runnable() {
 					@Override
@@ -126,11 +127,11 @@ public class AirEnvironmentActivity extends Activity {
 						}
 						demoApplication.setStatus(status);
 
-						List<Index> index = results.get(0).getIndex();
+						//List<Index> index = results.get(0).getIndex();
 						List<WeatherData> weatherData = results.get(0)
 								.getWeather_data();
 						updateView(results, weatherData);
-						systemOut(status);
+						
 					}
 				});
 			}
@@ -144,12 +145,8 @@ public class AirEnvironmentActivity extends Activity {
 			List<WeatherData> weatherData) {
 		// 今天
 		tv_TodayMsgCity.setText(results.get(0).getCurrentCity());
-		String strTemp1 = weatherData.get(0).getTemperature().substring(0, 2);
-		String strTemp2 = weatherData.get(0).getTemperature().substring(5, 7);
-		int intTemp1 = Integer.parseInt(strTemp1);
-		int intTemp2 = Integer.parseInt(strTemp2);
-		int intTemp = (intTemp1 + intTemp2) / 2;
-		tv_TodayMsgTemp.setText(intTemp + "℃");
+		String strTemp1 =weatherData.get(0).getDate().substring(14, 17);
+		tv_TodayMsgTemp.setText(strTemp1);
 		tv_TodayMsgDetails.setText(weatherData.get(0).getWeather() + " "
 				+ weatherData.get(0).getWind());
 		selectRLTodayMsgBackground(weatherData.get(0).getWeather());

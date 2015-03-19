@@ -46,7 +46,7 @@
             tcc:circleColor="@color/black"
             tcc:dataColor="@color/black"
             tcc:dataSize="25sp"
-            tcc:radiusC="80dp"
+            tcc:radiusC="100dp"
             tcc:ringColor="@color/blue_color"
             tcc:showProgressNum="false"
             tcc:showSymbol="false"
@@ -56,7 +56,8 @@
             tcc:textColor="@color/blue_color"
             tcc:textFlagName="PM25"
             tcc:textFlagSize="23sp"
-            tcc:textSize="60sp" />
+            tcc:textFlagColor="@color/black"
+            tcc:textSize="80sp" />
 
         <TextView
             android:id="@+id/tv_TodayMsgDetails"
