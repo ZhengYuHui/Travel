@@ -28,11 +28,11 @@
         android:orientation="vertical" >
 
         <TextView
-            android:layout_margin="15dp"
-            android:layout_marginBottom="15dp"
             android:id="@+id/tv_TodayMsgCity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="广州市"
             android:textSize="21sp" />
@@ -46,7 +46,7 @@
             tcc:circleColor="@color/black"
             tcc:dataColor="@color/black"
             tcc:dataSize="25sp"
-            tcc:radiusC="100dp"
+            tcc:radiusC="@dimen/tcv_radius_c"
             tcc:ringColor="@color/blue_color"
             tcc:showProgressNum="false"
             tcc:showSymbol="false"
@@ -54,24 +54,30 @@
             tcc:strokeWidthC="8dip"
             tcc:symbolSize="10sp"
             tcc:textColor="@color/blue_color"
+            tcc:textFlagColor="@color/black"
             tcc:textFlagName="PM25"
             tcc:textFlagSize="23sp"
-            tcc:textFlagColor="@color/black"
-            tcc:textSize="80sp" />
+            tcc:textSize="@dimen/tcv_textSize" />
 
         <TextView
             android:id="@+id/tv_TodayMsgDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="轻度污染"
+            android:text="2015-03-20"
+            android:textSize="19sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="空气质量指数"
             android:textSize="19sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="140dp"
         android:layout_weight="2"
         android:background="@color/white"
         android:orientation="horizontal" >
@@ -79,7 +85,7 @@
         <include
             android:id="@+id/include_1"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="140dp"
             android:layout_weight="1"
             layout="@layout/index_list_item"
             android:clickable="true" />
@@ -87,7 +93,7 @@
         <include
             android:id="@+id/include_2"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="140dp"
             android:layout_weight="1"
             layout="@layout/index_list_item"
             android:clickable="true" />
@@ -95,7 +101,7 @@
         <include
             android:id="@+id/include_3"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="140dp"
             android:layout_weight="1"
             layout="@layout/index_list_item"
             android:clickable="true" />
@@ -103,7 +109,7 @@
         <include
             android:id="@+id/include_4"
             android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_height="140dp"
             android:layout_weight="1"
             layout="@layout/index_list_item"
             android:clickable="true" />

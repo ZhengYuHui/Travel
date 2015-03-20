@@ -33,9 +33,21 @@
     <color name="green_33cc99">#33cc99</color>
     <color name="green_009966">#009966</color>
     <color name="green_00cc99">#00cc99</color>
-    
+   
     <color name="weather_sun">#FF6633</color>
     <color name="weather_cloudy">#3366ff</color>
     <color name="weather_rain">#666699</color>
+    
+    <color name="index_view_1">#33cccc</color>
+    <color name="index_view_2">#3366b6</color>
+    <color name="index_view_3">#ff3333</color>
+    <color name="index_view_4">#ff9933</color>
+    
+    <color name="index_1">#33cccc</color>
+    <color name="index_2">#3366b6</color>
+    <color name="index_3">#FF6600</color>
+    <color name="index_4">#FF6666</color>
+    <color name="index_5">#cc3300</color>
+	<color name="index_6">#993333</color>
 
 </resources>

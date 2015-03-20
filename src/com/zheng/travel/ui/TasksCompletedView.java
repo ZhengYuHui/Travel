@@ -21,6 +21,10 @@ public class TasksCompletedView extends View {
 	private Paint mStrokePaint;
 	// 画字体的画笔
 	private Paint mTextPaint;
+
+	// 画字体的画笔
+	private Paint mTextPaint2;
+
 	// 画下标文体的画笔
 	private Paint mTextFlagPaint;
 	// 画数据字体的画笔
@@ -80,10 +84,20 @@ public class TasksCompletedView extends View {
 	// 符号
 	private Paint mSymbolPaint;
 	// 符号大小
+
+	private Paint mTextFlagPaint2;
+	private int inedxColor1;
+	private int inedxColor2;
+	private int inedxColor3;
+	private int inedxColor4;
+	private int inedxColor5;
+	private int inedxColor6;
+
 	private float mSymbolSize;
 	private boolean mshowSymbol;
 	private boolean mshowProgressNum;
 	private String mProgressNum;
+	String txthanzi = "良";
 
 	public TasksCompletedView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -128,6 +142,20 @@ public class TasksCompletedView extends View {
 		mshowProgressNum = typeArray.getBoolean(
 				R.styleable.TasksCompletedView_showProgressNum, true);
 		mRingRadius = mRadius + mStrokeWidth / 2;
+
+		inedxColor1 = typeArray.getColor(
+				R.styleable.TasksCompletedView_inedxColor1, 0xFF009999);
+		inedxColor2 = typeArray.getColor(
+				R.styleable.TasksCompletedView_inedxColor2, 0xFF3366b6);
+		inedxColor3 = typeArray.getColor(
+				R.styleable.TasksCompletedView_inedxColor3, 0xFFFF6600);
+		inedxColor4 = typeArray.getColor(
+				R.styleable.TasksCompletedView_inedxColor4, 0xFFFF6666);
+		inedxColor5 = typeArray.getColor(
+				R.styleable.TasksCompletedView_inedxColor5, 0xFFcc3300);
+		inedxColor6 = typeArray.getColor(
+				R.styleable.TasksCompletedView_inedxColor6, 0xFF993333);
+
 	}
 
 	// 画笔设置
@@ -148,6 +176,7 @@ public class TasksCompletedView extends View {
 		mRingPaint = new Paint();
 		mRingPaint.setAntiAlias(true);
 		mRingPaint.setColor(mRingColor);
+
 		mRingPaint.setStyle(Paint.Style.STROKE);
 		mRingPaint.setStrokeCap(Paint.Cap.ROUND);
 		mRingPaint.setStrokeWidth(mStrokeWidth);
@@ -160,6 +189,12 @@ public class TasksCompletedView extends View {
 		mTextPaint.setTextSize(mTxtSize);
 		FontMetrics fm = mTextPaint.getFontMetrics();
 		mTxtHeight = (int) Math.ceil(fm.descent - fm.ascent);
+
+		mTextPaint2 = new Paint();
+		mTextPaint2.setAntiAlias(true);
+		mTextPaint2.setStyle(Paint.Style.FILL);
+		mTextPaint2.setColor(mTxtFlagColor);
+		mTextPaint2.setTextSize((float) (mTxtSize * 0.6));
 
 		// 符号
 		mSymbolPaint = new Paint();
@@ -176,6 +211,12 @@ public class TasksCompletedView extends View {
 		mTextFlagPaint.setTextSize(mTxtFlagSize);
 		FontMetrics fmFlag = mTextFlagPaint.getFontMetrics();
 		mTxtFlagHeight = (int) Math.ceil(fmFlag.descent - fmFlag.ascent);
+
+		mTextFlagPaint2 = new Paint();
+		mTextFlagPaint2.setAntiAlias(true);
+		mTextFlagPaint2.setStyle(Paint.Style.FILL);
+		mTextFlagPaint2.setColor(mTxtFlagColor);
+		mTextFlagPaint2.setTextSize((float) (mTxtFlagSize * 0.7));
 
 		// 数据
 		mDataPaint = new Paint();
@@ -197,9 +238,21 @@ public class TasksCompletedView extends View {
 		mTxtFlagWidth = mTextFlagPaint.measureText(mTxtFlagName, 0,
 				mTxtFlagName.length());
 		canvas.drawText(mTxtFlagName, mXCenter - mTxtFlagWidth / 2, mYCenter
-				+ mTxtFlagHeight / 4 + (float) (mRingRadius / 1.3),
-				mTextFlagPaint);
+				+ mTxtFlagHeight / 4, mTextFlagPaint);
+		canvas.drawLine((float) (mXCenter - (mRingRadius / 1.15)), mYCenter,
+				(float) (mXCenter - mTxtFlagWidth / 1.7), mYCenter,
+				mSymbolPaint);
+		canvas.drawLine((float) (mXCenter + (mRingRadius / 1.15)), mYCenter,
+				(float) (mXCenter + mTxtFlagWidth / 1.7), mYCenter,
+				mSymbolPaint);
 
+		// mTextFlagPaint2
+		canvas.drawText("健康", (float) (mXCenter - (mRingRadius / 1.6)),
+				(float) (mYCenter + (mRingRadius / 1.3)), mTextFlagPaint2);
+		float mWidth = mTextFlagPaint2.measureText("污染", 0, "污染".length());
+		canvas.drawText("污染",
+				(float) (mXCenter + (mRingRadius / 1.6) - mWidth),
+				(float) (mYCenter + (mRingRadius / 1.3)), mTextFlagPaint2);
 		// 画数据
 		if (mDataName != null) {
 			mDataWidth = mDataPaint.measureText(mDataName, 0,
@@ -230,8 +283,13 @@ public class TasksCompletedView extends View {
 				txt = mProgressNum + "";
 			}
 			mTxtWidth = mTextPaint.measureText(txt, 0, txt.length());
-			canvas.drawText(txt, mXCenter - mTxtWidth / 2, mYCenter
-					+ mTxtHeight / 4, mTextPaint);
+			canvas.drawText(txt, mXCenter - mTxtWidth / 2,
+					(float) (mYCenter - mYCenter / 3.7), mTextPaint);
+
+			float mhanziWidth = mTextPaint2.measureText(txthanzi, 0,
+					txthanzi.length());
+			canvas.drawText(txthanzi, mXCenter - mhanziWidth / 2,
+					(float) (mYCenter + mYCenter / 1.9), mTextPaint2);
 			if (mshowSymbol) {
 				// 画符号
 				canvas.drawText("%", mXCenter - mTxtWidth / 2 + mTxtWidth,
@@ -256,6 +314,40 @@ public class TasksCompletedView extends View {
 
 	public void setProgress(int progress) {
 		mProgress = progress;
+		// 刷新Progress
+		postInvalidate();
+	}
+
+	public void setProgressNew(int progress, String ProgressNum) {
+		mProgress = progress;
+		mProgressNum = ProgressNum;
+
+		if (progress <= 10) {
+			txthanzi = "优秀";
+			mRingPaint.setColor(inedxColor1);
+			mTextPaint.setColor(inedxColor1);
+		} else if (progress > 10 && progress <= 20) {
+			txthanzi = "良好";
+			mRingPaint.setColor(inedxColor2);
+			mTextPaint.setColor(inedxColor2);
+		} else if (progress > 20 && progress <= 30) {
+			txthanzi = "轻度";
+			mRingPaint.setColor(inedxColor3);
+			mTextPaint.setColor(inedxColor3);
+		} else if (progress > 30 && progress <= 40) {
+			txthanzi = "中度";
+			mRingPaint.setColor(inedxColor4);
+			mTextPaint.setColor(inedxColor4);
+		} else if (progress > 40 && progress <= 60) {
+			txthanzi = "重度";
+			mRingPaint.setColor(inedxColor5);
+			mTextPaint.setColor(inedxColor5);
+		} else {
+			txthanzi = "严重";
+			mRingPaint.setColor(inedxColor6);
+			mTextPaint.setColor(inedxColor6);
+		}
+
 		// 刷新Progress
 		postInvalidate();
 	}

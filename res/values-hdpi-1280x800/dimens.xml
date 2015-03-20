@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="tcv_radius_c">130dp</dimen>
+    <dimen name="tcv_textSize">80sp</dimen>
+
+</resources>

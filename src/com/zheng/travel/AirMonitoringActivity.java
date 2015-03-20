@@ -3,8 +3,12 @@ package com.zheng.travel;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +20,16 @@ import com.zheng.travel.ui.TasksCompletedView;
 
 public class AirMonitoringActivity extends Activity {
 
+	private int ImageResource[] = { R.drawable.ic_weather_temperature,
+			R.drawable.ic_weather_temperature,
+			R.drawable.ic_weather_temperature, R.drawable.ic_weather_dress,
+			R.drawable.ic_weather_movement, R.drawable.ic_weather_uv };
+	private String strResource[] = { "体感指数", "洗车指数", "旅游指数", "感冒指数", "运动指数",
+			"防晒指数" };
+	private int ImageViewResource[] = { R.color.index_view_1,
+			R.color.index_view_1, R.color.index_view_1, R.color.index_view_2,
+			R.color.index_view_4, R.color.index_view_3, };
+
 	private DemoApplication demoApplication;
 	private Status status;
 	private View include[] = new View[4];
@@ -25,6 +39,7 @@ public class AirMonitoringActivity extends Activity {
 	private TextView tv_TodayMsgDetails;
 	private TextView tv_TodayMsgCity;
 	private TasksCompletedView mTasksCompletedView;
+	private AlertDialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +54,43 @@ public class AirMonitoringActivity extends Activity {
 	 *****************************************************/
 	public void ImageViewOnClick(View v) {
 		switch (v.getId()) {
-		case R.id.include_1:
-
-			break;
-		case R.id.include_2:
-
-			break;
-		case R.id.include_3:
-
-			break;
-		case R.id.include_4:
-
-			break;
 		case R.id.back:
 			finish();
 			break;
 		}
+	}
+
+	/*******************************************************
+	 * 显示设置参数对话框
+	 ******************************************************/
+	public void showIndexDialog(int i) {
+		dialog = null;
+		AlertDialog.Builder builder = new Builder(AirMonitoringActivity.this);
+		View view = View.inflate(AirMonitoringActivity.this,
+				R.layout.index_dialog, null);
+
+		ImageView iv_index = (ImageView) view.findViewById(R.id.iv_index);
+		View iv_view = (View) view.findViewById(R.id.iv_view);
+		TextView tv_msg = (TextView) view.findViewById(R.id.tv_msg);
+		TextView tv_data = (TextView) view.findViewById(R.id.tv_data);
+
+		Typeface typeFace = Typeface.createFromAsset(getAssets(),
+				"EPSONhangshuti.ttf");
+		// 应用字体
+		tv_data.setTypeface(typeFace);
+
+		List<Results> results = status.getResults();
+		List<Index> index = results.get(0).getIndex();
+
+		iv_index.setImageResource(ImageResource[i]);
+		iv_view.setBackgroundResource(ImageViewResource[i]);
+		tv_msg.setText(strResource[i] + " : " + index.get(i).getZs());
+		tv_data.setText(index.get(i).getDes());
+
+		dialog = builder.create();
+		// dialog.setCancelable(false);
+		dialog.setView(view, 0, 0, 0, 0);
+		dialog.show();
 	}
 
 	/****************************************************
@@ -71,14 +107,27 @@ public class AirMonitoringActivity extends Activity {
 		tv_TodayMsgCity = (TextView) findViewById(R.id.tv_TodayMsgCity);
 		tv_TodayMsgDetails = (TextView) findViewById(R.id.tv_TodayMsgDetails);
 		tv_TodayMsgCity.setText(results.get(0).getCurrentCity());
+		tv_TodayMsgDetails.setText(status.getDate());
 
 		include[0] = findViewById(R.id.include_1);
+		include[0].setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showIndexDialog(0);
+			}
+		});
 		iv_index[0] = (ImageView) include[0].findViewById(R.id.iv_index);
 		tv_msg[0] = (TextView) include[0].findViewById(R.id.tv_msg);
 		tv_data[0] = (TextView) include[0].findViewById(R.id.tv_data);
 		tv_data[0].setText(index.get(0).getZs());
 
 		include[1] = findViewById(R.id.include_2);
+		include[1].setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showIndexDialog(3);
+			}
+		});
 		iv_index[1] = (ImageView) include[1].findViewById(R.id.iv_index);
 		tv_msg[1] = (TextView) include[1].findViewById(R.id.tv_msg);
 		tv_data[1] = (TextView) include[1].findViewById(R.id.tv_data);
@@ -87,6 +136,12 @@ public class AirMonitoringActivity extends Activity {
 		tv_data[1].setText(index.get(3).getZs());
 
 		include[2] = findViewById(R.id.include_3);
+		include[2].setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showIndexDialog(5);
+			}
+		});
 		iv_index[2] = (ImageView) include[2].findViewById(R.id.iv_index);
 		tv_msg[2] = (TextView) include[2].findViewById(R.id.tv_msg);
 		tv_data[2] = (TextView) include[2].findViewById(R.id.tv_data);
@@ -95,6 +150,12 @@ public class AirMonitoringActivity extends Activity {
 		tv_data[2].setText(index.get(5).getZs());
 
 		include[3] = findViewById(R.id.include_4);
+		include[3].setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showIndexDialog(4);
+			}
+		});
 		iv_index[3] = (ImageView) include[3].findViewById(R.id.iv_index);
 		tv_msg[3] = (TextView) include[3].findViewById(R.id.tv_msg);
 		tv_data[3] = (TextView) include[3].findViewById(R.id.tv_data);
@@ -112,6 +173,7 @@ public class AirMonitoringActivity extends Activity {
 	private class JKProgressRunable implements Runnable {
 
 		private String data;
+
 		public JKProgressRunable(String data1) {
 			data = data1;
 		}
@@ -119,9 +181,16 @@ public class AirMonitoringActivity extends Activity {
 		@Override
 		public void run() {
 			double mProgress = Double.parseDouble(data);
-			mProgress = (mProgress / 500) * 100;
-			mTasksCompletedView
-					.setProgressAndProgressNum((int) mProgress, data);
+			double mProgressForI;
+			for (double i = 0; i <= mProgress; i++) {
+				mProgressForI = (i / 500) * 100;
+				mTasksCompletedView.setProgressNew((int) mProgressForI, data);
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }

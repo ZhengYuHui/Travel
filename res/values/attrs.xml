@@ -17,6 +17,14 @@
         <attr name="dataColor" format="color" />
         <attr name="showSymbol" format="boolean" />
         <attr name="showProgressNum" format="boolean" />
+        
+        <attr name="inedxColor1" format="color" />
+        <attr name="inedxColor2" format="color" />
+        <attr name="inedxColor3" format="color" />
+        <attr name="inedxColor4" format="color" />
+        <attr name="inedxColor5" format="color" />
+        <attr name="inedxColor6" format="color" />
+        
     </declare-styleable>
 
 </resources>
