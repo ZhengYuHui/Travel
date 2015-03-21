@@ -73,6 +73,10 @@
             android:name="com.zheng.travel.AirMonitoringActivity"
             android:label="@string/title_activity_air_monitoring" >
         </activity>
+        <activity
+            android:name="com.zheng.travel.PoiSearchActivity"
+            android:label="@string/title_activity_poi_search" >
+        </activity>
     </application>
 
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >

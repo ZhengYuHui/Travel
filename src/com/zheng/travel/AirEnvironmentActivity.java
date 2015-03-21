@@ -110,7 +110,7 @@ public class AirEnvironmentActivity extends Activity {
 	protected void initData(final String strCity) {
 
 		if (!NetworkDetector.detect(AirEnvironmentActivity.this)) {
-			Toast.makeText(AirEnvironmentActivity.this, "网路不可用！！！", 1).show();
+			Toast.makeText(AirEnvironmentActivity.this, "网络不可用！！！", 1).show();
 			return;
 		}
 
