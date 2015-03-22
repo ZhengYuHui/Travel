@@ -77,6 +77,11 @@
             android:name="com.zheng.travel.PoiSearchActivity"
             android:label="@string/title_activity_poi_search" >
         </activity>
+        <activity
+            android:name="com.zheng.travel.ShowSearchSelectActivity"
+            android:label="@string/title_activity_show_search_select"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
     </application>
 
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >

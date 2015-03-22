@@ -23,11 +23,12 @@ public class PoiSearchActivity extends Activity implements
 		OnGetPoiSearchResultListener {
 
 	private String TAG = "PoiSearchActivity";
-
+	private DemoApplication demoApplication;
 	private PoiSearch mPoiSearch = null;// POI检索接口
 	private int load_Index = 0;// POI检索结果分页编号
 	private double latitude;// 纬度
 	private double longitude;// 经度
+	private String searchKey;// 搜索关键字
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class PoiSearchActivity extends Activity implements
 		setContentView(R.layout.activity_poi_search);
 		getResultRoutes();
 		initView();
-		searchPoi("医院", 1000);
+		searchPoi(searchKey, 5000);
 	}
 
 	/***************************************************************
@@ -46,15 +47,20 @@ public class PoiSearchActivity extends Activity implements
 		// 初始化搜索模块，注册搜索事件监听
 		mPoiSearch = PoiSearch.newInstance();
 		mPoiSearch.setOnGetPoiSearchResultListener(this);
+
 	}
 
 	/**********************************************************************************
 	 * 获取MainActivity传递过来的定位经纬度
 	 ********************************************************************************/
 	protected void getResultRoutes() {
+		// 获取全局变量类
+		demoApplication = (DemoApplication) getApplication();
 		Intent intent = getIntent();
-		latitude = intent.getDoubleExtra("latitude", 0);
-		longitude = intent.getDoubleExtra("longitude", 0);
+		searchKey = intent.getStringExtra("searchKey");
+		latitude = demoApplication.getLatitude();
+		longitude = demoApplication.getLongitude();
+		MyLog.printLi(TAG, "searchKey----->" + searchKey);
 		MyLog.printLi(TAG, "latitude----->" + latitude);
 		MyLog.printLi(TAG, "longitude----->" + longitude);
 	}
@@ -133,10 +139,10 @@ public class PoiSearchActivity extends Activity implements
 			MyLog.printLi(TAG, "poiInfo1.type--->" + poiInfo1.type);// poi类型，0：普通点，1：公交站，2：公交线路，3：地铁站，4：地铁线路,
 			MyLog.printLi(TAG, "poiInfo1.uid--->" + poiInfo1.uid);// isPano为true调用街景PanoramaService类的方法检索街景数据
 		}
-		for (CityInfo cityInfo1 : cityInfo) {
-			MyLog.printLi(TAG, "cityInfo1.city--->" + cityInfo1.city);// 城市名称
-			MyLog.printLi(TAG, "cityInfo1.num--->" + cityInfo1.num);// 搜索结果数量
-		}
+		// for (CityInfo cityInfo1 : cityInfo) {
+		// MyLog.printLi(TAG, "cityInfo1.city--->" + cityInfo1.city);// 城市名称
+		// MyLog.printLi(TAG, "cityInfo1.num--->" + cityInfo1.num);// 搜索结果数量
+		// }
 
 	}
 

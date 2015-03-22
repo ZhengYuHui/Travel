@@ -55,8 +55,7 @@ public class MainActivity extends Activity implements
 	private BitmapDescriptor mCurrentMarker;
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
-	private double latitude;// 纬度
-	private double longitude;// 经度
+	private DemoApplication demoApplication;
 	// UI相关
 	private Button requestLocButton; // 定位模式按键
 	private Button commonButton; // 普通图层按键
@@ -159,6 +158,8 @@ public class MainActivity extends Activity implements
 	 * 初始化其他控件
 	 *************************************************************/
 	protected void initOtherView() {
+		// 获取全局变量类
+		demoApplication = (DemoApplication) getApplication();
 
 		RL_Route = (RelativeLayout) findViewById(R.id.RL_Route);
 		RL_Navi = (RelativeLayout) findViewById(R.id.RL_Navi);
@@ -202,9 +203,7 @@ public class MainActivity extends Activity implements
 				break;
 			case R.id.RL_Nearby:
 				Intent intentNearby = new Intent(MainActivity.this,
-						PoiSearchActivity.class);
-				intentNearby.putExtra("latitude", latitude);
-				intentNearby.putExtra("longitude", longitude);
+						ShowSearchSelectActivity.class);
 				startActivity(intentNearby);
 				break;
 			case R.id.button1:
@@ -389,8 +388,10 @@ public class MainActivity extends Activity implements
 					.direction(100).latitude(location.getLatitude())
 					.longitude(location.getLongitude()).build();
 			mBaiduMap.setMyLocationData(locData);
-			latitude = location.getLatitude();
-			longitude = location.getLongitude();
+
+			demoApplication.setLatitude(location.getLatitude());
+			demoApplication.setLongitude(location.getLongitude());
+
 			if (isFirstLoc) {
 				isFirstLoc = false;
 				LatLng ll = new LatLng(location.getLatitude(),

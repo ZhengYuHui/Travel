@@ -11,6 +11,28 @@ import com.zheng.travel.domain.Status;
 public class DemoApplication extends Application {
 
 	/********************************************
+	 * 纬度 / 经度
+	 *********************************************/
+	private double latitude;
+	private double longitude;
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	/********************************************
 	 * 天气和空气质量数据
 	 *********************************************/
 	public Status status;
