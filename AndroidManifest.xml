@@ -82,6 +82,10 @@
             android:label="@string/title_activity_show_search_select"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>
+        <activity
+            android:name="com.zheng.travel.ShowMoreSelectActivity"
+            android:label="@string/title_activity_show_more_select" >
+        </activity>
     </application>
 
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >
