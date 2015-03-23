@@ -3,9 +3,15 @@ package com.zheng.travel;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.model.LatLng;
@@ -14,9 +20,11 @@ import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiDetailSearchOption;
 import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
+import com.zheng.travel.adapter.SearchNearbyListAdapter;
 import com.zheng.travel.utils.MyLog;
 
 public class PoiSearchActivity extends Activity implements
@@ -29,6 +37,12 @@ public class PoiSearchActivity extends Activity implements
 	private double latitude;// 纬度
 	private double longitude;// 经度
 	private String searchKey;// 搜索关键字
+	private ProgressDialog pd;
+	private ListView lv_showSearch;
+	private SearchNearbyListAdapter searchNearbyListAdapter;
+	private List<PoiInfo> poiInfo = null;
+	private TextView tv_showSearchMeg;
+	private TextView tv_error;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +61,27 @@ public class PoiSearchActivity extends Activity implements
 		// 初始化搜索模块，注册搜索事件监听
 		mPoiSearch = PoiSearch.newInstance();
 		mPoiSearch.setOnGetPoiSearchResultListener(this);
+		tv_error = (TextView) findViewById(R.id.tv_error);
+		tv_showSearchMeg = (TextView) findViewById(R.id.tv_showSearchMeg);
+		tv_showSearchMeg.setText("附近" + searchKey);
+		lv_showSearch = (ListView) findViewById(R.id.lv_showSearch);
+		searchNearbyListAdapter = new SearchNearbyListAdapter(
+				PoiSearchActivity.this, poiInfo);
+		lv_showSearch.setAdapter(searchNearbyListAdapter);
+		lv_showSearch.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				// PoiInfo poi = poiInfo.get(position);
+				// mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())
+				// .poiUid(poi.uid));
+				Intent intentNearby = new Intent(PoiSearchActivity.this,
+						ShowPoiDetailActivity.class);
+				intentNearby.putExtra("poiPosition", position);
+				startActivity(intentNearby);
+			}
+		});
 	}
 
 	/**********************************************************************************
@@ -69,6 +103,10 @@ public class PoiSearchActivity extends Activity implements
 	 * 搜索Poi
 	 *************************************************************/
 	protected void searchPoi(String key, int range) {
+		pd = new ProgressDialog(PoiSearchActivity.this);
+		pd.setMessage("努力查询中...请稍等");
+		pd.show();
+
 		LatLng latLng = new LatLng(latitude, longitude);
 		mPoiSearch.searchNearby((new PoiNearbySearchOption()).location(latLng)
 				.keyword(key).pageNum(load_Index).radius(range));
@@ -78,8 +116,15 @@ public class PoiSearchActivity extends Activity implements
 	 * poi 详情查询结果回调
 	 *************************************************************/
 	@Override
-	public void onGetPoiDetailResult(PoiDetailResult arg0) {
-
+	public void onGetPoiDetailResult(PoiDetailResult result) {
+		if (result.error != SearchResult.ERRORNO.NO_ERROR) {
+			Toast.makeText(PoiSearchActivity.this, "抱歉，未找到结果",
+					Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(PoiSearchActivity.this,
+					result.getName() + ": " + result.getAddress(),
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	/***************************************************************
@@ -87,14 +132,19 @@ public class PoiSearchActivity extends Activity implements
 	 *************************************************************/
 	@Override
 	public void onGetPoiResult(PoiResult result) {
+		if (pd.isShowing()) {
+			pd.dismiss();
+		}
 		if (result == null
 				|| result.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {
-			Toast.makeText(PoiSearchActivity.this, "未找到结果", Toast.LENGTH_LONG)
-					.show();
+			tv_error.setVisibility(View.VISIBLE);
 			return;
 		}
 		if (result.error == SearchResult.ERRORNO.NO_ERROR) {
 			myLogPrint(result);
+			poiInfo = result.getAllPoi();// 获取Poi检索结果
+			searchNearbyListAdapter.updateListView(poiInfo);
+			demoApplication.setPoiInfo(poiInfo);
 			return;
 		}
 		if (result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {

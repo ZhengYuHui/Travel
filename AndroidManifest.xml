@@ -86,6 +86,10 @@
             android:name="com.zheng.travel.ShowMoreSelectActivity"
             android:label="@string/title_activity_show_more_select" >
         </activity>
+        <activity
+            android:name="com.zheng.travel.ShowPoiDetailActivity"
+            android:label="@string/title_activity_show_poi_detail" >
+        </activity>
     </application>
 
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >

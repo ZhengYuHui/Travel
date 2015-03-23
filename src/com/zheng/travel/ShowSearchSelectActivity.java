@@ -6,12 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class ShowSearchSelectActivity extends Activity {
 
 	private String searchKey;
-	private Boolean isSearch = true;
 	private EditText et_SearchNearby;
 
 	@Override
@@ -25,7 +23,6 @@ public class ShowSearchSelectActivity extends Activity {
 	public void SearchNearby(View v) {
 		switch (v.getId()) {
 		case R.id.iv_back:
-			isSearch = false;
 			finish();
 			break;
 		case R.id.bt_SearchNearby:

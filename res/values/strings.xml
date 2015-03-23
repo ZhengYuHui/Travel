@@ -16,5 +16,6 @@
     <string name="title_activity_poi_search">PoiSearchActivity</string>
     <string name="title_activity_show_search_select">ShowSearchSelectActivity</string>
     <string name="title_activity_show_more_select">ShowMoreSelectActivity</string>
+    <string name="title_activity_show_poi_detail">ShowPoiDetailActivity</string>
 
 </resources>

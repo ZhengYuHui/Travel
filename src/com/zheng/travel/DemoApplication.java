@@ -1,14 +1,30 @@
 package com.zheng.travel;
 
+import java.util.List;
+
 import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.zheng.travel.domain.Status;
 
 public class DemoApplication extends Application {
+
+	/********************************************
+	 * POI附近搜索结果
+	 *********************************************/
+	private List<PoiInfo> poiInfo;
+
+	public List<PoiInfo> getPoiInfo() {
+		return poiInfo;
+	}
+
+	public void setPoiInfo(List<PoiInfo> poiInfo) {
+		this.poiInfo = poiInfo;
+	}
 
 	/********************************************
 	 * 纬度 / 经度
