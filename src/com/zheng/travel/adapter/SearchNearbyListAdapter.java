@@ -2,20 +2,34 @@ package com.zheng.travel.adapter;
 
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.zheng.travel.R;
+import com.zheng.travel.ShowPoiDetailActivity;
 
 public class SearchNearbyListAdapter extends BaseAdapter {
 
+	private int resid[] = { R.color.springgreen, R.color.blue_color,
+			R.color.azure, R.color.turquoise, R.color.thistle,
+			R.color.slateblue, R.color.cornsilk, R.color.sandybrown,
+			R.color.royalblue, R.color.red };
+	private AlertDialog dialog;
 	private Context context;
 	private List<PoiInfo> poiInfo;
+	private int myPosition;
 
 	public SearchNearbyListAdapter(Context context, List<PoiInfo> poiInfo) {
 		this.context = context;
@@ -67,14 +81,56 @@ public class SearchNearbyListAdapter extends BaseAdapter {
 			holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
 			holder.tv_itemNum = (TextView) view.findViewById(R.id.tv_itemNum);
 			holder.tv_address = (TextView) view.findViewById(R.id.tv_address);
+			holder.tv_1 = (TextView) view.findViewById(R.id.tv_1);
+			holder.tv_2 = (TextView) view.findViewById(R.id.tv_2);
+			holder.tv_3 = (TextView) view.findViewById(R.id.tv_3);
+
 			view.setTag(holder);
 		} else { // 不为null时 复用缓存对象
 			view = convertView;
 			holder = (ViewHolder) view.getTag();
 		}
+		holder.tv_itemNum.setBackgroundResource(resid[position]);
 		holder.tv_itemNum.setText(String.valueOf(position + 1));
 		holder.tv_name.setText(poiInfo.get(position).name);
 		holder.tv_address.setText(poiInfo.get(position).address);
+		holder.tv_1.setTag(position);
+		holder.tv_1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				myPosition = Integer.parseInt(v.getTag().toString());
+				// Intent intentNearby = new Intent(context,
+				// RouteResultsActivity.class);
+				// intentNearby.putExtra("POIlatitude",
+				// poiInfo.get(myPosition).location.latitude);
+				// intentNearby.putExtra("POIlongitude",
+				// poiInfo.get(myPosition).location.longitude);
+				// context.startActivity(intentNearby);
+			}
+		});
+		holder.tv_2.setTag(position);
+		holder.tv_2.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				myPosition = Integer.parseInt(v.getTag().toString());
+				if (poiInfo.get(myPosition).phoneNum.trim().equals("")) {
+					Toast.makeText(context, "无联系电话", Toast.LENGTH_SHORT).show();
+				} else {
+					showIndexDialog(myPosition);
+				}
+			}
+		});
+		holder.tv_3.setTag(position);
+		holder.tv_3.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				myPosition = Integer.parseInt(v.getTag().toString());
+				Intent intentNearby = new Intent(context,
+						ShowPoiDetailActivity.class);
+				intentNearby.putExtra("poiPosition", myPosition);
+				context.startActivity(intentNearby);
+			}
+		});
 		return view;
 	}
 
@@ -82,11 +138,53 @@ public class SearchNearbyListAdapter extends BaseAdapter {
 		TextView tv_itemNum;
 		TextView tv_name;
 		TextView tv_address;
+		TextView tv_1;
+		TextView tv_2;
+		TextView tv_3;
 	}
 
 	public void updateListView(List<PoiInfo> poiInfo) {
 		this.poiInfo = poiInfo;
 		this.notifyDataSetChanged();
+	}
+
+	/*******************************************************
+	 * 显示拨打电话提示对话框
+	 ******************************************************/
+	public void showIndexDialog(final int myPosition) {
+		dialog = null;
+		AlertDialog.Builder builder = new Builder(context);
+		View view = View.inflate(context, R.layout.call_phone_dialog, null);
+
+		TextView tv_msg = (TextView) view.findViewById(R.id.tv_msg);
+		tv_msg.setText("拨打：" + poiInfo.get(myPosition).phoneNum + " ?");
+		TextView tv_data = (TextView) view.findViewById(R.id.tv_data);
+		tv_data.setText(poiInfo.get(myPosition).name);
+
+		Button bt_cancel = (Button) view.findViewById(R.id.bt_cancel);
+		bt_cancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		Button bt_sure = (Button) view.findViewById(R.id.bt_sure);
+		bt_sure.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent();
+				// 指定其动作为拨打电话
+				intent.setAction(Intent.ACTION_CALL);
+				// 指定将要拨出的号码
+				intent.setData(Uri.parse("tel:"
+						+ poiInfo.get(myPosition).phoneNum));
+				context.startActivity(intent);
+				dialog.dismiss();
+			}
+		});
+		dialog = builder.create();
+		dialog.setView(view, 0, 0, 0, 0);
+		dialog.show();
 	}
 
 }
