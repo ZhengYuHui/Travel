@@ -18,6 +18,11 @@ import android.widget.Toast;
 
 import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
@@ -25,15 +30,18 @@ import com.baidu.mapapi.search.route.TransitRouteLine;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.zheng.travel.adapter.RSListViewAdapter;
+import com.zheng.travel.utils.MyLog;
 
 public class RoutePlanActivity extends Activity {
 
-	// 搜索相关
 	private ImageView transit;
 	private ImageView drive;
 	private ImageView walk;
 	private EditText editSt;
 	private EditText editEn;
+
+	private String str_editSt;
+	private String str_editEn;
 
 	private int selectType = 2;
 	private SharedPreferences sp;
@@ -46,6 +54,7 @@ public class RoutePlanActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_route_plan);
+
 		sp = getSharedPreferences("config", MODE_PRIVATE);
 
 		transit = (ImageView) findViewById(R.id.transit);
@@ -156,16 +165,27 @@ public class RoutePlanActivity extends Activity {
 			editEn.setText(str_editSt);
 		} else if (v.getId() == R.id.search) {// 搜索路线
 			// 处理搜索按钮响应
-			String str_editSt = editSt.getText().toString();
-			String str_editEn = editEn.getText().toString();
-			// 跳转到搜索页面
-			Intent intent = new Intent(RoutePlanActivity.this,
-					RouteResultsActivity.class);
-			intent.putExtra("selectType", selectType);
-			intent.putExtra("str_editSt", str_editSt);
-			intent.putExtra("str_editEn", str_editEn);
-			startActivity(intent);
+			str_editSt = editSt.getText().toString();
+			str_editEn = editEn.getText().toString();
+			intentActivity();
 		}
+	}
+
+	protected void intentActivity() {
+		// 跳转到搜索页面
+		Intent intent = new Intent(RoutePlanActivity.this,
+				RouteResultsActivity.class);
+		intent.setFlags(0);// 设置Flag，告诉RouteResultsActivity这个intent的来源
+		intent.putExtra("selectType", selectType);
+		intent.putExtra("str_editSt", str_editSt);
+		intent.putExtra("str_editEn", str_editEn);
+		startActivity(intent);
+	}
+
+	@Override
+	protected void onDestroy() {
+		// mSearch.destroy();
+		super.onDestroy();
 	}
 
 }

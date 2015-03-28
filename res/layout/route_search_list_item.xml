@@ -21,7 +21,7 @@
         android:layout_marginTop="20dp"
         android:layout_toRightOf="@id/iv_1"
         android:text="天河客运站  --> 龙洞步行街"
-        android:textColor="@color/qianhui"
+        android:textColor="@color/qianhui_66"
         android:textSize="21sp" />
 
 </RelativeLayout>

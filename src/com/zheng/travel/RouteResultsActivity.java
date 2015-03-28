@@ -13,9 +13,16 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.route.DrivingRouteLine;
 import com.baidu.mapapi.search.route.DrivingRoutePlanOption;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
@@ -166,6 +173,10 @@ public class RouteResultsActivity extends Activity implements
 		// 设置起终点信息，对于公交 search 来说，城市名无意义
 		PlanNode stNode = PlanNode.withCityNameAndPlaceName("广州", str_editSt);
 		PlanNode enNode = PlanNode.withCityNameAndPlaceName("广州", str_editEn);
+		// LatLng stNodeLocation = new LatLng(dou_stLatitude, dou_stLongitude);
+		// LatLng enNodeLocation = new LatLng(dou_edLatitude, dou_edLongitude);
+		// PlanNode stNode = PlanNode.withLocation(stNodeLocation);
+		// PlanNode enNode = PlanNode.withLocation(enNodeLocation);
 
 		switch (selectType) {
 		case 1:
@@ -191,8 +202,16 @@ public class RouteResultsActivity extends Activity implements
 	protected void getResultRoutes() {
 		Intent intent = getIntent();
 		selectType = intent.getIntExtra("selectType", 2);
-		str_editSt = intent.getStringExtra("str_editSt");
-		str_editEn = intent.getStringExtra("str_editEn");
+		switch (intent.getFlags()) {
+		case 0:
+			str_editSt = intent.getStringExtra("str_editSt");
+			str_editEn = intent.getStringExtra("str_editEn");
+			break;
+		case 1:
+
+			break;
+		}
+
 	}
 
 	/**********************************************************************************
@@ -385,6 +404,12 @@ public class RouteResultsActivity extends Activity implements
 					+ str_editEn);
 			editor.commit();
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		mSearch.destroy();
+		super.onDestroy();
 	}
 
 }

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -43,6 +42,7 @@ import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.zheng.travel.utils.MyLog;
 
@@ -367,9 +367,17 @@ public class MainActivity extends Activity implements
 		// result.getLocation().latitude, result.getLocation().longitude);
 	}
 
+	/**************************************************************
+	 * 根据经纬度返回地点信息
+	 *************************************************************/
 	@Override
-	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
-
+	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+			return;
+		}
+		demoApplication.setPositioning(result.getAddress());
+		// MyLog.printLi("onGetReverseGeoCodeResult",
+		//	"------>" + result.getAddress());
 	}
 
 	/**************************************************************
@@ -391,6 +399,12 @@ public class MainActivity extends Activity implements
 
 			demoApplication.setLatitude(location.getLatitude());
 			demoApplication.setLongitude(location.getLongitude());
+
+			// 根据经纬度查询具体地址信息
+			LatLng ptCenter = new LatLng(location.getLatitude(),
+					location.getLongitude());
+			mSearch.reverseGeoCode(new ReverseGeoCodeOption()
+					.location(ptCenter));
 
 			if (isFirstLoc) {
 				isFirstLoc = false;
@@ -466,6 +480,7 @@ public class MainActivity extends Activity implements
 
 	@Override
 	protected void onDestroy() {
+		mSearch.destroy();
 		// 取消监听 SDK 广播
 		unregisterReceiver(mReceiver);
 		// 退出时销毁定位

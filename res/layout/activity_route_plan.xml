@@ -99,7 +99,8 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:focusable="false"
-                    android:text="岗顶" >
+                    android:hint="输入起点"
+                    android:text="我的位置" >
 
                     <requestFocus />
                 </EditText>
@@ -124,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:focusable="false"
-                    android:text="火车东站" >
+                    android:hint="输入终点" >
 
                     <requestFocus />
                 </EditText>

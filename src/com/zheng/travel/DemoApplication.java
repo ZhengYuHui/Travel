@@ -27,6 +27,19 @@ public class DemoApplication extends Application {
 	}
 
 	/********************************************
+	 * 地位地址
+	 *********************************************/
+	private String Positioning;
+
+	public String getPositioning() {
+		return Positioning;
+	}
+
+	public void setPositioning(String positioning) {
+		Positioning = positioning;
+	}
+
+	/********************************************
 	 * 纬度 / 经度
 	 *********************************************/
 	private double latitude;
