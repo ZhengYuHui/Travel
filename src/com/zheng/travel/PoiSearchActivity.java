@@ -137,6 +137,9 @@ public class PoiSearchActivity extends FragmentActivity implements
 	 *************************************************************/
 	public void topOnClick(View v) {
 		switch (v.getId()) {
+		case R.id.iv_back:// 返回
+			finish();
+			break;
 		case R.id.tv_map:// 显示模式转换
 			changeShowMode();
 			break;
@@ -144,7 +147,15 @@ public class PoiSearchActivity extends FragmentActivity implements
 			changeShowMode();
 			break;
 		case R.id.tv_1_in:// 地图显示模式底部点击事件（路线）
-
+			Intent intentNearby2 = new Intent(context,
+					RouteResultsActivity.class);
+			intentNearby2.setFlags(1);
+			intentNearby2.putExtra("POIname", poiInfo.get(myIndex).name);
+			intentNearby2.putExtra("POIlatitude",
+					poiInfo.get(myIndex).location.latitude);
+			intentNearby2.putExtra("POIlongitude",
+					poiInfo.get(myIndex).location.longitude);
+			context.startActivity(intentNearby2);
 			break;
 		case R.id.tv_2_in:// 地图显示模式底部点击事件（电话）
 			if (poiInfo.get(myIndex).phoneNum.trim().equals("")) {
@@ -189,11 +200,9 @@ public class PoiSearchActivity extends FragmentActivity implements
 		if (showMode) {
 			RL_list.setVisibility(View.VISIBLE);
 			LL_map.setVisibility(View.GONE);
-
 		} else {
 			LL_map.setVisibility(View.VISIBLE);
 			RL_list.setVisibility(View.GONE);
-
 		}
 	}
 

@@ -27,7 +27,7 @@
         <TextView
             android:id="@+id/locationSearch"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/tv_location_search_height"
             android:layout_weight="99"
             android:clickable="true"
             android:drawableLeft="@drawable/default_common_searchicon_icon_normal"

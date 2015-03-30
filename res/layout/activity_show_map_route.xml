@@ -112,7 +112,7 @@
             android:clickable="true"
             android:gravity="center"
             android:text=""
-            android:textColor="@color/qianhui" />
+            android:textColor="@color/qianhui_66" />
 
         <View
             android:layout_width="0.8dp"

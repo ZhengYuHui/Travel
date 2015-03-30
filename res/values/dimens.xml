@@ -5,5 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="tcv_radius_c">90dp</dimen>
     <dimen name="tcv_textSize">65sp</dimen>
+    <dimen name="tv_location_search_height">40sp</dimen>
+   
 
 </resources>

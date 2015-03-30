@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:hint="输入z终点"
+                android:hint="输入终点"
                 android:singleLine="true" >
             </EditText>
 

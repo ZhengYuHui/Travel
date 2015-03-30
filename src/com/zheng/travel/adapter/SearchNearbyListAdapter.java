@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.zheng.travel.R;
+import com.zheng.travel.RouteResultsActivity;
 import com.zheng.travel.ShowPoiDetailActivity;
 
 public class SearchNearbyListAdapter extends BaseAdapter {
@@ -99,13 +100,15 @@ public class SearchNearbyListAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				myPosition = Integer.parseInt(v.getTag().toString());
-				// Intent intentNearby = new Intent(context,
-				// RouteResultsActivity.class);
-				// intentNearby.putExtra("POIlatitude",
-				// poiInfo.get(myPosition).location.latitude);
-				// intentNearby.putExtra("POIlongitude",
-				// poiInfo.get(myPosition).location.longitude);
-				// context.startActivity(intentNearby);
+				Intent intentNearby2 = new Intent(context,
+						RouteResultsActivity.class);
+				intentNearby2.setFlags(1);
+				intentNearby2.putExtra("POIname", poiInfo.get(myPosition).name);
+				intentNearby2.putExtra("POIlatitude",
+						poiInfo.get(myPosition).location.latitude);
+				intentNearby2.putExtra("POIlongitude",
+						poiInfo.get(myPosition).location.longitude);
+				context.startActivity(intentNearby2);
 			}
 		});
 		holder.tv_2.setTag(position);

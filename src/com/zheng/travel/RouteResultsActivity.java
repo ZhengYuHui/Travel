@@ -40,7 +40,7 @@ import com.zheng.travel.utils.MyLog;
 import com.zheng.travel.utils.TransformationTime;
 
 public class RouteResultsActivity extends Activity implements
-		OnGetRoutePlanResultListener {
+		OnGetRoutePlanResultListener, OnGetGeoCoderResultListener {
 
 	private String TAG = "RouteResultsActivity";
 	private ImageView transit;
@@ -56,7 +56,14 @@ public class RouteResultsActivity extends Activity implements
 	private RouteListAdapter routeListAdapter;
 	private ProgressDialog pd;
 	private SharedPreferences sp;
+	private GeoCoder GeoSearch = null; // 名称与经纬度互转
+	private boolean GeoSearchType = false;// 起点终点转换为经纬度：false->起点；true->终点
 	private RoutePlanSearch mSearch = null; // 搜索模块，也可去掉地图模块独立使用
+	private boolean searchMode = false;// 搜索方式：false->名称；true->经纬度
+	private double dou_stLatitude;// 起点经度
+	private double dou_stLongitude;// 起点纬度
+	private double dou_edLatitude;// 终点经度
+	private double dou_edLongitude;// 终点纬度
 
 	private RouteLine routeLine[];
 	private DemoApplication demoApplication;
@@ -69,7 +76,6 @@ public class RouteResultsActivity extends Activity implements
 
 		initView();
 		getResultRoutes();
-		startSearch();
 		initImageView();
 	}
 
@@ -80,6 +86,10 @@ public class RouteResultsActivity extends Activity implements
 		sp = getSharedPreferences("config", MODE_PRIVATE);
 		// 获取全局变量类
 		demoApplication = (DemoApplication) getApplication();
+		// 初始化搜索模块，注册事件监听
+		GeoSearch = GeoCoder.newInstance();
+		GeoSearch.setOnGetGeoCodeResultListener(this);
+
 		// 初始化搜索模块，注册事件监听
 		mSearch = RoutePlanSearch.newInstance();
 		mSearch.setOnGetRoutePlanResultListener(this);
@@ -170,13 +180,18 @@ public class RouteResultsActivity extends Activity implements
 		pd.setMessage("努力查询中...请稍等");
 		pd.show();
 
-		// 设置起终点信息，对于公交 search 来说，城市名无意义
-		PlanNode stNode = PlanNode.withCityNameAndPlaceName("广州", str_editSt);
-		PlanNode enNode = PlanNode.withCityNameAndPlaceName("广州", str_editEn);
-		// LatLng stNodeLocation = new LatLng(dou_stLatitude, dou_stLongitude);
-		// LatLng enNodeLocation = new LatLng(dou_edLatitude, dou_edLongitude);
-		// PlanNode stNode = PlanNode.withLocation(stNodeLocation);
-		// PlanNode enNode = PlanNode.withLocation(enNodeLocation);
+		PlanNode stNode = null;
+		PlanNode enNode = null;
+		if (searchMode) {
+			LatLng stNodeLocation = new LatLng(dou_stLatitude, dou_stLongitude);
+			LatLng enNodeLocation = new LatLng(dou_edLatitude, dou_edLongitude);
+			stNode = PlanNode.withLocation(stNodeLocation);
+			enNode = PlanNode.withLocation(enNodeLocation);
+		} else {
+			// 设置起终点信息，对于公交 search 来说，城市名无意义
+			stNode = PlanNode.withCityNameAndPlaceName("广州", str_editSt);
+			enNode = PlanNode.withCityNameAndPlaceName("广州", str_editEn);
+		}
 
 		switch (selectType) {
 		case 1:
@@ -206,9 +221,22 @@ public class RouteResultsActivity extends Activity implements
 		case 0:
 			str_editSt = intent.getStringExtra("str_editSt");
 			str_editEn = intent.getStringExtra("str_editEn");
+			if (str_editSt.equals("我的位置")) {
+				str_editSt = demoApplication.getPositioning();
+			} else if (str_editEn.equals("我的位置")) {
+				str_editEn = demoApplication.getPositioning();
+			}
+			startSearch();
 			break;
 		case 1:
-
+			searchMode = true;
+			dou_stLatitude = demoApplication.getLatitude();
+			dou_stLongitude = demoApplication.getLongitude();
+			dou_edLatitude = intent.getDoubleExtra("POIlatitude", 0);
+			dou_edLongitude = intent.getDoubleExtra("POIlongitude", 0);
+			str_editEn = intent.getStringExtra("POIname");
+			str_editSt = "我的位置";
+			startSearch();
 			break;
 		}
 
@@ -406,9 +434,38 @@ public class RouteResultsActivity extends Activity implements
 		}
 	}
 
+	/**************************************************************
+	 * 地点查询结果result（返回经纬度）
+	 *************************************************************/
+	@Override
+	public void onGetGeoCodeResult(GeoCodeResult result) {
+		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+			Toast.makeText(RouteResultsActivity.this, "抱歉，未能找到结果",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
+		// if (GeoSearchType) {
+		// dou_edLatitude = result.getLocation().latitude;
+		// dou_edLongitude = result.getLocation().longitude;
+		// } else {
+		// dou_stLatitude = result.getLocation().latitude;
+		// dou_stLongitude = result.getLocation().longitude;
+		// }
+		// startSearch();
+	}
+
+	/**************************************************************
+	 * 根据经纬度返回地点信息
+	 *************************************************************/
+	@Override
+	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+
+	}
+
 	@Override
 	protected void onDestroy() {
 		mSearch.destroy();
+		GeoSearch.destroy();
 		super.onDestroy();
 	}
 

@@ -19,7 +19,7 @@
             android:layout_marginRight="5dip"
             android:background="@drawable/e_dog_back"
             android:clickable="true"
-            android:onClick="SearchNearby" />
+            android:onClick="topOnClick" />
 
         <TextView
             android:id="@+id/tv_showSearchMeg"
